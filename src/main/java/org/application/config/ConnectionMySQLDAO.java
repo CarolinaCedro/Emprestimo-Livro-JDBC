@@ -29,6 +29,7 @@ public class ConnectionMySQLDAO {
 
     // Método para obter a conexão com o banco de dados.
     public static Connection getConnection() {
+        System.out.println("Conexão com o banco bem sucedida !");
         return con;
     }
 
