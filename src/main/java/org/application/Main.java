@@ -1,6 +1,7 @@
 package org.application;
 
 import org.application.config.ConnectionMySQLDAO;
+import org.application.view.LivroCRUDGUI;
 
 public class Main {
 
@@ -8,6 +9,7 @@ public class Main {
         System.out.println("Iniciando ...");
 
         ConnectionMySQLDAO.getConnection();
+
 
 //        System.out.println("Criando uma tabela no banco");
 //        String queryCreateTable = "CREATE TABLE Persons (\n" +
