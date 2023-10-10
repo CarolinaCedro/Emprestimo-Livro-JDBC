@@ -11,6 +11,3 @@
 ![img.png](img.png)
 
 
-### Ders
-![img.png](img.png)
-
