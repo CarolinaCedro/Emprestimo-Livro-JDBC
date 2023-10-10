@@ -1,7 +1,6 @@
 package org.application;
 
 import org.application.config.ConnectionMySQLDAO;
-import org.application.view.LivroCRUDGUI;
 
 public class Main {
 
