@@ -9,7 +9,7 @@ package org.application.model;
 import java.util.Objects;
 
 public class AutorBean {
-    private Integer idAutores;
+    private Integer idAutor;
     private String nome;
     private String documento;
     private String status;
@@ -17,20 +17,20 @@ public class AutorBean {
     public AutorBean() {
     }
 
-    public AutorBean(Integer idAutores, String nome, String documento, String status) {
-        this.idAutores = idAutores;
+    public AutorBean(Integer idAutor, String nome, String documento, String status) {
+        this.idAutor = idAutor;
         this.nome = nome;
         this.documento = documento;
         this.status = status;
     }
 
 
-    public Integer getIdAutores() {
-        return idAutores;
+    public Integer getIdAutor() {
+        return idAutor;
     }
 
-    public void setIdAutores(Integer idAutores) {
-        this.idAutores = idAutores;
+    public void setIdAutor(Integer idAutor) {
+        this.idAutor = idAutor;
     }
 
     public String getNome() {
@@ -62,18 +62,18 @@ public class AutorBean {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AutorBean autorBean = (AutorBean) o;
-        return Objects.equals(idAutores, autorBean.idAutores);
+        return Objects.equals(idAutor, autorBean.idAutor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idAutores);
+        return Objects.hash(idAutor);
     }
 
     @Override
     public String toString() {
         return "AutorBean{" +
-                "idAutores=" + idAutores +
+                "idAutores=" + idAutor +
                 ", nome='" + nome + '\'' +
                 ", documento='" + documento + '\'' +
                 ", status='" + status + '\'' +

@@ -1,44 +1,67 @@
 package org.application;
 
+import org.application.actions.MenuAutor;
+import org.application.actions.MenuEditora;
+import org.application.actions.MenuLivro;
 import org.application.config.ConnectionMySQLDAO;
+import org.application.dao.AutorDao;
+import org.application.dao.EditoraDao;
+import org.application.dao.LivroDao;
+
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Iniciando ...");
-
         ConnectionMySQLDAO.getConnection();
+        Scanner scanner = new Scanner(System.in);
+        MenuAutor menuAutor = new MenuAutor();
+        MenuEditora menuEditora = new MenuEditora();
+        MenuLivro menuLivro = new MenuLivro();
 
+        while (true) {
+            System.out.println("Escolha uma opção:");
+            System.out.println("1. Autor");
+            System.out.println("2. Editora");
+            System.out.println("3. Livro");
+            System.out.println("4. Criar Tabelas");
+            System.out.println("0. Sair");
+            System.out.print("Opção: ");
 
-//        System.out.println("Criando uma tabela no banco");
-//        String queryCreateTable = "CREATE TABLE Persons (\n" +
-//                "    PersonID int,\n" +
-//                "    LastName varchar(255),\n" +
-//                "    FirstName varchar(255),\n" +
-//                "    Address varchar(255),\n" +
-//                "    City varchar(255)\n" +
-//                ");";
-//
-//        try {
-//            ConnectionMySQLDAO.executeQuery(queryCreateTable);
-//            System.out.println("Tabela criada com sucesso");
-//        } catch (RuntimeException exception) {
-//            System.out.println("Erro: " + exception);
-//        }
+            int opcao = scanner.nextInt();
 
+            switch (opcao) {
+                case 1:
+                    menuAutor.exibirMenuAutores();
+                    break;
+                case 2:
+                    menuEditora.exibirMenuAutores();
+                    break;
+                case 3:
+                    menuLivro.exibirMenuLivros();
+                    break;
+                case 4:
+                    criarTabelas();
+                    break;
+                case 0:
+                    System.out.println("Encerrando o programa.");
+                    scanner.close();
+                    System.exit(0);
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+            }
+        }
+    }
 
-//        System.out.println("Populando tabela");
-//        String queryCreate =  "INSERT INTO Persons (PersonID, LastName, FirstName, Address, City)\n" +
-//                "VALUES ('1', 'Carol Teste', 'Carol Teste', 'Carol Teste', 'Carol Teste');";
-//
-//        try {
-//            ConnectionMySQLDAO.executeQuery(queryCreate);
-//            System.out.println("Tabela populada com sucesso");
-//        } catch (RuntimeException exception) {
-//            System.out.println("Erro: " + exception);
-//        }
+    private static void criarTabelas() {
+        try {
+            EditoraDao.criarTabelaEditoras();
+            AutorDao.criarTabelaAutores();
+            LivroDao.criarTabelaLivros();
 
-
+        } catch (Throwable err) {
+            System.out.println(err);
+        }
     }
 
 }

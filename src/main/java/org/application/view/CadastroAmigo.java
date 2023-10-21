@@ -5,19 +5,18 @@
  */
 package org.application.view;
 
-//Font Principal
-//NOTO SANS MONO CJK JP
-
-public class JavaApplication1 {
+public class CadastroAmigo {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //PrincipalJFrame frame = new PrincipalJFrame();
-        TabsJFrame frame = new TabsJFrame();
-        frame.setVisible(true);
+//        CadastrarAmigo tela = new CadastrarAmigo();
+//        tela.setVisible(true);
     }
 
-
+    void setVisible(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
 }

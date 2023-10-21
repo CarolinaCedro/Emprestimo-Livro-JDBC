@@ -12,10 +12,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditoraDao {
-    // Método para inserir uma editora no banco de dados.
+
+    public static void criarTabelaEditoras() {
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "CREATE TABLE IF NOT EXISTS Editoras (" +
+                "idEditora INT AUTO_INCREMENT PRIMARY KEY," +
+                "razaoSocial VARCHAR(45) NOT NULL," +
+                "status VARCHAR(15)" +
+                ")";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.execute();
+            System.out.println("Tabela Editoras criada com sucesso.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
     public static void inserir(EditoraBEAN editora) {
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "INSERT INTO Editora (razaoSocial, status) VALUES (?, ?)";
+        String query = "INSERT INTO Editoras (razaoSocial, status) VALUES (?, ?)";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             psmt.setString(1, editora.getRazaoSocial());
             psmt.setString(2, editora.getStatus());
@@ -25,10 +43,9 @@ public class EditoraDao {
         }
     }
 
-    // Método para atualizar uma editora no banco de dados.
     public static void atualizar(EditoraBEAN editora) {
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "UPDATE Editora SET razaoSocial = ?, status = ? WHERE idEditora = ?";
+        String query = "UPDATE Editoras SET razaoSocial = ?, status = ? WHERE idEditora = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             psmt.setString(1, editora.getRazaoSocial());
             psmt.setString(2, editora.getStatus());
@@ -39,10 +56,9 @@ public class EditoraDao {
         }
     }
 
-    // Método para excluir uma editora do banco de dados.
     public static void excluir(int idEditora) {
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "DELETE FROM Editora WHERE idEditora = ?";
+        String query = "DELETE FROM Editoras WHERE idEditora = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             psmt.setInt(1, idEditora);
             psmt.executeUpdate();
@@ -51,11 +67,10 @@ public class EditoraDao {
         }
     }
 
-    // Método para obter todas as editoras do banco de dados.
     public static List<EditoraBEAN> listarTodas() {
         List<EditoraBEAN> editoras = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Editora";
+        String query = "SELECT * FROM Editoras";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {
@@ -69,5 +84,24 @@ public class EditoraDao {
             e.printStackTrace();
         }
         return editoras;
+    }
+
+    public static EditoraBEAN buscarAutorPorId(int idEditora) {
+        EditoraBEAN editora = null;
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Editoras WHERE idEditora = ?";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.setInt(1, idEditora);
+            ResultSet rs = psmt.executeQuery();
+            if (rs.next()) {
+                editora = new EditoraBEAN();
+                editora.setIdEditora(rs.getInt("idEditora"));
+                editora.setRazaoSocial(rs.getString("razaoSocial"));
+                editora.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return editora;
     }
 }
