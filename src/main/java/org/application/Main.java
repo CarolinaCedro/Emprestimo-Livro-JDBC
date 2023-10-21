@@ -1,9 +1,11 @@
 package org.application;
 
+import org.application.actions.MenuAmigo;
 import org.application.actions.MenuAutor;
 import org.application.actions.MenuEditora;
 import org.application.actions.MenuLivro;
 import org.application.config.ConnectionMySQLDAO;
+import org.application.dao.AmigoDao;
 import org.application.dao.AutorDao;
 import org.application.dao.EditoraDao;
 import org.application.dao.LivroDao;
@@ -18,13 +20,15 @@ public class Main {
         MenuAutor menuAutor = new MenuAutor();
         MenuEditora menuEditora = new MenuEditora();
         MenuLivro menuLivro = new MenuLivro();
+        MenuAmigo menuAmigo = new MenuAmigo();
 
         while (true) {
             System.out.println("Escolha uma opção:");
-            System.out.println("1. Autor");
-            System.out.println("2. Editora");
-            System.out.println("3. Livro");
-            System.out.println("4. Criar Tabelas");
+            System.out.println("1. Amigo");
+            System.out.println("2. Autor");
+            System.out.println("3. Editora");
+            System.out.println("4. Livro");
+            System.out.println("5. Criar Tabelas");
             System.out.println("0. Sair");
             System.out.print("Opção: ");
 
@@ -32,15 +36,18 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    menuAutor.exibirMenuAutores();
+                    menuAmigo.exibirMenuAmigos();
                     break;
                 case 2:
-                    menuEditora.exibirMenuAutores();
+                    menuAutor.exibirMenuAutores();
                     break;
                 case 3:
-                    menuLivro.exibirMenuLivros();
+                    menuEditora.exibirMenuAutores();
                     break;
                 case 4:
+                    menuLivro.exibirMenuLivros();
+                    break;
+                case 5:
                     criarTabelas();
                     break;
                 case 0:
@@ -58,6 +65,7 @@ public class Main {
             EditoraDao.criarTabelaEditoras();
             AutorDao.criarTabelaAutores();
             LivroDao.criarTabelaLivros();
+            AmigoDao.criarTabelaAmigos();
 
         } catch (Throwable err) {
             System.out.println(err);

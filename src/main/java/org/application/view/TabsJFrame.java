@@ -11,10 +11,6 @@ import org.application.model.EditoraBEAN;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
-/**
- * @author rodrigo.pires
- */
 public class TabsJFrame extends javax.swing.JFrame {
 
     private DefaultTableModel modelo = new DefaultTableModel();
