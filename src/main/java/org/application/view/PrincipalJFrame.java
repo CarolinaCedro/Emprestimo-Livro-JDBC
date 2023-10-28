@@ -159,10 +159,10 @@ public class PrincipalJFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        // Crie uma instância da segunda tela
-    CadastroAmigo cadastroAmigoView = new CadastroAmigo();
-    
-    // Torne a segunda tela visível
-    cadastroAmigoView.setVisible(true);
+//    CadastroAmigo cadastroAmigoView = new CadastroAmigo();
+//
+//    // Torne a segunda tela visível
+//    cadastroAmigoView.setVisible(true);
     
     // Oculte a primeira tela (a que contém o botão)
     this.setVisible(false);

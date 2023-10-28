@@ -26,6 +26,12 @@ public class AmigoBean {
     public AmigoBean() {
     }
 
+    public AmigoBean(String nome, String documento, String status) {
+        this.nome = nome;
+        this.documento = documento;
+        this.status = status;
+    }
+
     public Integer getIdAmigo() {
         return idAmigo;
     }

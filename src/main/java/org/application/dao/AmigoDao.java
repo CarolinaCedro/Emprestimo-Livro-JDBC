@@ -28,7 +28,7 @@ public class AmigoDao {
         }
     }
 
-    public static void inserir(AmigoBean amigo) {
+    public static boolean inserir(AmigoBean amigo) {
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "INSERT INTO Amigos (nome, documento, status) VALUES (?, ?, ?)";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
@@ -36,9 +36,11 @@ public class AmigoDao {
             psmt.setString(2, amigo.getDocumento());
             psmt.setString(3, amigo.getStatus());
             psmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public static void atualizar(AmigoBean amigo) {
