@@ -459,6 +459,37 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
 
+
+        btnExcluir.setEnabled(true);
+        txtNome.setEnabled(true);
+        txtDocument.setEnabled(true);
+        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
+        modelo.setRowCount(0); // Limpa a tabela
+
+        List<AmigoBean> amigos = AmigoDao.listarTodos();
+
+        jButtonBack.setEnabled(false);
+
+
+        txtStatus.setText("ATIVO");
+        txtStatus.setEnabled(false);
+
+        btnSalvar.setText("Salvar");
+
+
+
+
+        List<AmigoBean> amigoss = AmigoDao.listarTodosOrdenadosPorNomeAsc();
+
+        for (AmigoBean amigo : amigos) {
+            modelo.addRow(new Object[]{
+                    amigo.getIdAmigo(),
+                    amigo.getNome(),
+                    amigo.getDocumento(),
+                    amigo.getStatus()
+            });
+        }
+
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
