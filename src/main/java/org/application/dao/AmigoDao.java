@@ -103,6 +103,8 @@ public class AmigoDao {
     }
 
 
+
+
     public static List<AmigoBean> listarTodosOrdenadosPorNomeAsc() {
         List<AmigoBean> amigos = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();

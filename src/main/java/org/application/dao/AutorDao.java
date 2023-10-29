@@ -31,7 +31,7 @@ public class AutorDao {
     }
 
 
-    public static void inserir(AutorBean autor) {
+    public static boolean inserir(AutorBean autor) {
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "INSERT INTO Autores (nome,documento,status) VALUES (?, ?,?)";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
@@ -42,9 +42,89 @@ public class AutorDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
-    public static void atualizar(AutorBean autor) {
+    public static int getLastInsertedId() {
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT LAST_INSERT_ID() as last_id";
+
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            try (ResultSet rs = psmt.executeQuery()) {
+                if (rs.next()) {
+                    int lastId = rs.getInt("last_id");
+                    return lastId;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // Retornar -1 em caso de falha na recuperação do último ID
+    }
+
+    public static List<AutorBean> buscarAutorPorNome(String nome) {
+        List<AutorBean> amigos = new ArrayList<>();
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Autores WHERE nome LIKE ?";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.setString(1, "%" + nome + "%"); // Usando LIKE para buscar nomes parcialmente correspondentes
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                AutorBean amigo = new AutorBean();
+                amigo.setIdAutor(rs.getInt("idAutor"));
+                amigo.setNome(rs.getString("nome"));
+                amigo.setDocumento(rs.getString("documento"));
+                amigo.setStatus(rs.getString("status"));
+                amigos.add(amigo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return amigos;
+    }
+
+    public static List<AutorBean> listarTodosInativos() {
+        List<AutorBean> amigos = new ArrayList<>();
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Autores WHERE status = 'INATIVO'";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                AutorBean amigo = new AutorBean();
+                amigo.setIdAutor(rs.getInt("idAutor"));
+                amigo.setNome(rs.getString("nome"));
+                amigo.setDocumento(rs.getString("documento"));
+                amigo.setStatus(rs.getString("status"));
+                amigos.add(amigo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return amigos;
+    }
+
+    public static List<AutorBean> listarTodosOrdenadosPorNomeAsc() {
+        List<AutorBean> amigos = new ArrayList<>();
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Autores WHERE status = 'ATIVO' ORDER BY nome ASC";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                AutorBean amigo = new AutorBean();
+                amigo.setIdAutor(rs.getInt("idAutor"));
+                amigo.setNome(rs.getString("nome"));
+                amigo.setDocumento(rs.getString("documento"));
+                amigo.setStatus(rs.getString("status"));
+                amigos.add(amigo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return amigos;
+    }
+
+    public static boolean atualizar(AutorBean autor) {
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "UPDATE Autores SET nome = ?, status = ? ,documento = ? WHERE idAutor = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
@@ -58,11 +138,12 @@ public class AutorDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public static void excluir(int idAutor) {
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "DELETE FROM Autores WHERE idAutor = ?";
+        String query = "UPDATE Autores SET status = 'INATIVO' WHERE idAutor = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             psmt.setInt(1, idAutor);
             psmt.executeUpdate();

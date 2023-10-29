@@ -34,7 +34,7 @@ public class LivroDao {
     }
 
 
-    public static void inserir(LivroBean livro) {
+    public static boolean inserir(LivroBean livro) {
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "INSERT INTO Livros (titulo, autor_id,editora_id,status) VALUES (?,?,?,?)";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
@@ -46,9 +46,10 @@ public class LivroDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
-    public static void atualizar(LivroBean livro) {
+    public static boolean atualizar(LivroBean livro) {
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "UPDATE Livros SET titulo = ?, autor_id = ? ,editora_id = ? ,status = ? WHERE idLivro = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
@@ -61,17 +62,124 @@ public class LivroDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public static int getLastInsertedId() {
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT LAST_INSERT_ID() as last_id";
+
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            try (ResultSet rs = psmt.executeQuery()) {
+                if (rs.next()) {
+                    int lastId = rs.getInt("last_id");
+                    return lastId;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // Retornar -1 em caso de falha na recuperação do último ID
+    }
+
+    public static LivroBean buscarAmigoPorId(int idAmigo) {
+        LivroBean livro = null;
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Livros WHERE idLivro = ?";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.setInt(1, idAmigo);
+            ResultSet rs = psmt.executeQuery();
+            if (rs.next()) {
+                livro = new LivroBean();
+                livro.setIdLivro(rs.getInt("idLivro"));
+                livro.setTitulo(rs.getString("titulo"));
+                livro.setEditora_id(rs.getInt("editora_id"));
+                livro.setAutor_id(rs.getInt("autor_id"));
+                livro.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return livro;
+    }
+
+
+    public static List<LivroBean> listarTodosOrdenadosPorNomeAsc() {
+        List<LivroBean> livros = new ArrayList<>();
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Livros WHERE status = 'ATIVO' ORDER BY titulo ASC";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                LivroBean livro = new LivroBean();
+                livro.setIdLivro(rs.getInt("idLivro"));
+                livro.setTitulo(rs.getString("titulo"));
+                livro.setEditora_id(rs.getInt("editora_id"));
+                livro.setAutor_id(rs.getInt("autor_id"));
+                livro.setStatus(rs.getString("status"));
+                livros.add(livro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return livros;
     }
 
     public static void excluir(int idLivro) {
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "DELETE FROM Livros WHERE idLivro = ?";
+        String query = "UPDATE Livros SET status = 'INATIVO' WHERE idLivro = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             psmt.setInt(1, idLivro);
             psmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<LivroBean> listarTodosInativos() {
+        System.out.println("chegou aqui");
+        List<LivroBean> livros = new ArrayList<>();
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Livros WHERE status = 'INATIVO'";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                LivroBean livro = new LivroBean();
+                livro.setIdLivro(rs.getInt("idLivro"));
+                livro.setTitulo(rs.getString("titulo"));
+                livro.setEditora_id(rs.getInt("editora_id"));
+                livro.setAutor_id(rs.getInt("autor_id"));
+                livro.setStatus(rs.getString("status"));
+                livros.add(livro);
+                System.out.println("o livro" + livro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return livros;
+    }
+
+    public static List<LivroBean> buscarLivroPorNome(String titulo) {
+        List<LivroBean> amigos = new ArrayList<>();
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Livros WHERE titulo LIKE ?";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.setString(1, "%" + titulo + "%"); // Usando LIKE para buscar nomes parcialmente correspondentes
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                LivroBean livro = new LivroBean();
+                livro.setIdLivro(rs.getInt("idLivro"));
+                livro.setTitulo(rs.getString("titulo"));
+                livro.setEditora_id(rs.getInt("editora_id"));
+                livro.setAutor_id(rs.getInt("autor_id"));
+                livro.setStatus(rs.getString("status"));
+                amigos.add(livro);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return amigos;
     }
 
     public static List<LivroBean> listarTodas() {

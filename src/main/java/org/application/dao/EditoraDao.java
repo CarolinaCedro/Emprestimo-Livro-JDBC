@@ -43,7 +43,7 @@ public class EditoraDao {
         }
     }
 
-    public static void atualizar(EditoraBEAN editora) {
+    public static boolean atualizar(EditoraBEAN editora) {
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "UPDATE Editoras SET razaoSocial = ?, status = ? WHERE idEditora = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
@@ -54,6 +54,7 @@ public class EditoraDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public static void excluir(int idEditora) {

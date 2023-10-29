@@ -28,6 +28,13 @@ public class LivroBean {
     public LivroBean() {
     }
 
+    public LivroBean(String titulo, String status, Integer editora_id, Integer autor_id) {
+        this.titulo = titulo;
+        this.status = status;
+        this.editora_id = editora_id;
+        this.autor_id = autor_id;
+    }
+
     public Integer getIdLivro() {
         return idLivro;
     }

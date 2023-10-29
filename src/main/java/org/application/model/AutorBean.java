@@ -24,6 +24,11 @@ public class AutorBean {
         this.status = status;
     }
 
+    public AutorBean(String nome, String documento, String status) {
+        this.nome = nome;
+        this.documento = documento;
+        this.status = status;
+    }
 
     public Integer getIdAutor() {
         return idAutor;
