@@ -6,6 +6,8 @@ package org.application.model;
 //        documento
 //        status
 
+import org.application.enums.Status;
+
 import java.util.Objects;
 
 public class AmigoBean {
@@ -15,9 +17,14 @@ public class AmigoBean {
     private String documento;
     private String status;
 
-
     public AmigoBean(Integer idAmigo, String nome, String documento, String status) {
         this.idAmigo = idAmigo;
+        this.nome = nome;
+        this.documento = documento;
+        this.status = status;
+    }
+
+    public AmigoBean(String nome, String documento, String status) {
         this.nome = nome;
         this.documento = documento;
         this.status = status;
@@ -26,11 +33,6 @@ public class AmigoBean {
     public AmigoBean() {
     }
 
-    public AmigoBean(String nome, String documento, String status) {
-        this.nome = nome;
-        this.documento = documento;
-        this.status = status;
-    }
 
     public Integer getIdAmigo() {
         return idAmigo;

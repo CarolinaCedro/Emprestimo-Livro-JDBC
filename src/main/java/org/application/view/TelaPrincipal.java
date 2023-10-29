@@ -11,9 +11,13 @@ import org.application.model.AmigoBean;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class TelaPrincipal extends javax.swing.JFrame {
+
+    private JProgressBar progressBar;
 
     private DefaultTableModel modelo = new DefaultTableModel();
     private AmigoDao amigoDAO = new AmigoDao();
@@ -26,6 +30,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         initCustomComponents();
         popularTabela();
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -45,12 +50,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         tabelaClientes = new javax.swing.JTable();
         btnExcluir = new javax.swing.JButton();
         lblStatus = new javax.swing.JLabel();
-        txtStatus = new javax.swing.JTextField();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        txtIdAmigo = new javax.swing.JTextField();
+        txtStatus = new javax.swing.JTextField();
+        jButtonBack = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuItemSair = new javax.swing.JMenu();
         jMenuItemSair = new javax.swing.JMenuItem();
@@ -69,15 +76,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         lblDocument.setText("Documento");
 
         tabelaClientes.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String[]{
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
         ));
         tabelaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -94,17 +101,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirActionPerformed(evt);
-                System.out.println("clicou pra excluir");
             }
         });
 
         lblStatus.setText("Status");
-
-        txtStatus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNome1ActionPerformed(evt);
-            }
-        });
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,8 +113,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
 
         jButton1.setText("Buscar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("restore");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         jLabel1.setText("Amigos");
@@ -123,6 +133,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
+            }
+        });
+
+        txtIdAmigo.setText("jTextField2");
+
+        jButtonBack.setText("Voltar");
+        jButtonBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBackActionPerformed(evt);
             }
         });
 
@@ -148,78 +167,89 @@ public class TelaPrincipal extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(132, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtIdAmigo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(225, 225, 225)
+                        .addComponent(jButtonBack)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(132, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jButton2)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jButton3)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(btnSalvar)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(btnExcluir))
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                .addGroup(layout.createSequentialGroup()
-                                                                        .addComponent(lblStatus)
-                                                                        .addGap(18, 18, 18)
-                                                                        .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                .addGroup(layout.createSequentialGroup()
-                                                                        .addComponent(lblNome)
-                                                                        .addGap(18, 18, 18)
-                                                                        .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                        .addGap(32, 32, 32)
-                                                        .addComponent(lblDocument)
-                                                        .addGap(18, 18, 18)
-                                                        .addComponent(txtDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel1)
-                                                .addGap(268, 268, 268)))
-                                .addGap(125, 125, 125))
+                            .addComponent(lblNome)
+                            .addGap(18, 18, 18)
+                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(32, 32, 32)
+                            .addComponent(lblDocument)
+                            .addGap(18, 18, 18)
+                            .addComponent(txtDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblStatus)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(340, 340, 340))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnSalvar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnExcluir))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(268, 268, 268)))
+                .addGap(125, 125, 125))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(jLabel1)
-                                .addGap(44, 44, 44)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblNome)
-                                        .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblDocument)
-                                        .addComponent(txtDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGap(14, 14, 14)
-                                                .addComponent(lblStatus))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btnSalvar)
-                                        .addComponent(btnExcluir))
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(22, 22, 22))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel1)
+                .addGap(44, 44, 44)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNome)
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDocument)
+                    .addComponent(txtDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStatus)
+                    .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSalvar)
+                    .addComponent(btnExcluir))
+                .addGap(18, 18, 18)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonBack)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtIdAmigo, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)))
+                .addGap(22, 22, 22))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
 
     private void menuItemSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSairActionPerformed
         // TODO add your handling code here:
@@ -250,77 +280,53 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
 
+
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {
         String nome = txtNome.getText();
         String doc = txtDocument.getText();
-        String status = txtStatus.getText();
+//        String status = txtStatus.setText("Ativo");
+        String status = "ATIVO";
 
         if (!isCamposValidos(nome, doc, status)) {
             JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        // Crie um amigo sem atribuir um ID, pois o banco de dados o gerará automaticamente
-        AmigoBean amigo = new AmigoBean(nome, doc, status);
+        int linhaSelecionada = tabelaClientes.getSelectedRow();
 
-        // Insira o amigo no banco de dados
-        boolean isCadastrado = AmigoDao.inserir(amigo);
+        if (linhaSelecionada >= 0) {
+            Integer idAmigoSelecionado = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
 
-        if (isCadastrado) {
-            // Recupere o ID gerado pelo banco de dados
-            int idAmigo = amigo.getIdAmigo();
+            System.out.println("o carinha selecionado " + idAmigoSelecionado);
 
-            // Adicione o amigo à tabela com o ID correto
-            modelo.addRow(new Object[]{idAmigo, amigo.getNome(), amigo.getDocumento(), amigo.getStatus()});
-            limparCampos();
+            // Atualizar um amigo existente com base no ID
+            AmigoBean amigo = new AmigoBean(idAmigoSelecionado, nome, doc, status);
+            boolean isAtualizado = AmigoDao.atualizar(amigo);
+
+            System.out.println("status atualização " + isAtualizado);
+
+            if (!isAtualizado) {
+                modelo.setValueAt(nome, linhaSelecionada, 1);
+                modelo.setValueAt(doc, linhaSelecionada, 2);
+                modelo.setValueAt(status, linhaSelecionada, 3);
+                limparCampos();
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao atualizar o amigo", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "Amigo já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            // Criar um novo amigo, pois nenhum amigo está selecionado na tabela
+            AmigoBean amigo = new AmigoBean(nome, doc, status);
+            boolean isCadastrado = AmigoDao.inserir(amigo);
+
+            if (isCadastrado) {
+                int idAmigo = AmigoDao.getLastInsertedId();
+                modelo.addRow(new Object[]{idAmigo, amigo.getNome(), amigo.getDocumento(), amigo.getStatus()});
+                limparCampos();
+            } else {
+                JOptionPane.showMessageDialog(null, "Amigo já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
-
-
-
-//    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {
-//
-//        String idAmigo = txtNome.getText();
-//        String nome = txtNome.getText();
-//        String doc = txtDocument.getText();
-//        String status = txtStatus.getText();
-//
-//        if (idAmigo.isEmpty()) {
-//            if (!isCamposValidos(nome, doc, status)) {
-//                JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
-//                return;
-//            }
-//
-//            AmigoBean amigo = new AmigoBean(null, nome, doc, status);
-//            System.out.println("amigo" + amigo);
-//            boolean isCadastrado = AmigoDao.inserir(amigo);
-//
-//            //criar o metodo lastItem para enfim atualizar o ultimo registro cadastrado
-//
-//
-//            if (isCadastrado) {
-//                modelo.addRow(new Object[]{amigo.getIdAmigo(), amigo.getNome(), amigo.getDocumento(), amigo.getStatus()});
-//                limparCampos();
-//            } else {
-//                JOptionPane.showMessageDialog(null, "Amigo já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        } else {
-//            if (!isCamposValidos(nome, doc, status)) {
-//                JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
-//                return;
-//            }
-//            Integer id = Integer.getInteger(idAmigo);
-//
-//            AmigoBean amigo = new AmigoBean(id, nome, doc, status);
-//            System.out.println("amigo" + amigo);
-//            modelo.addRow(new Object[]{id, amigo.getNome(), amigo.getDocumento(), amigo.getStatus()});
-//            limparCampos();
-//        }
-//
-//
-//    }
 
 
     private void tabelaClientesMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_tabelaClientesMouseClicked
@@ -328,16 +334,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Integer idAmigo = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
         try {
             AmigoBean amigo = AmigoDao.buscarAmigoPorId(idAmigo);
-
-//            System.out.println("amigo " + amigo);
-//
-//            Integer idAmigoIntegeter = amigo.getIdAmigo();
-//            String idAmigoStr = String.valueOf(idAmigoIntegeter);
-//
-//            System.out.println("id " + idAmigoStr);
-
-//            System.out.println("o id é " + amigo.getIdAmigo().toString());
-//            txtIdAmigo.setText(amigo.getIdAmigo().toString());
             txtNome.setText(amigo.getNome());
             txtStatus.setText(amigo.getStatus());
             txtDocument.setText(amigo.getDocumento());
@@ -375,13 +371,116 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void txtNome1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNome1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNome1ActionPerformed
+    private void atualizarTabela(List<AmigoBean> amigos) {
+        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
+        modelo.setRowCount(0); // Limpa a tabela
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+        for (AmigoBean amigo : amigos) {
+            modelo.addRow(new Object[]{
+                    amigo.getIdAmigo(),
+                    amigo.getNome(),
+                    amigo.getDocumento(),
+                    amigo.getStatus()
+            });
+        }
+    }
+
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String filtroNome = jTextField1.getText(); // Obtenha o texto do campo de filtro
+        System.out.println("nome que será filtrado");
+
+        // Crie uma instância de SwingWorker para executar a busca por nome em segundo plano
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Realize a busca por nome e atualize a tabela com os resultados
+                List<AmigoBean> amigosFiltrados = AmigoDao.buscarAmigosPorNome(filtroNome);
+
+                // Atualize a tabela na UI thread
+                SwingUtilities.invokeLater(() -> {
+                    atualizarTabela(amigosFiltrados);
+                });
+
+                return null;
+            }
+        };
+
+        worker.execute(); // Inicie a execução do SwingWorker
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        btnExcluir.setEnabled(false);
+        txtNome.setEnabled(false);
+        txtDocument.setEnabled(false);
+        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
+        modelo.setRowCount(0); // Limpa a tabela
+
+        List<AmigoBean> amigos = AmigoDao.listarTodosInativos();
+
+        jButtonBack.setEnabled(true);
+
+
+        txtStatus.setText("ATIVO");
+        txtStatus.setEnabled(false);
+
+        btnSalvar.setText("Restaurar");
+        btnSalvar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                int selectedRow = tabelaClientes.getSelectedRow();
+                if (selectedRow >= 0) {
+                    int idAmigo = (int) modelo.getValueAt(selectedRow, 0);
+
+
+                    for (AmigoBean amigo : amigos) {
+                        if (amigo.getIdAmigo() == idAmigo) {
+                            amigo.setStatus("ATIVO");
+                            break;
+                        }
+                    }
+
+                    modelo.setValueAt("ATIVO", selectedRow, 3);
+
+                }
+            }
+        });
+
+        for (AmigoBean amigo : amigos) {
+            modelo.addRow(new Object[]{
+                    amigo.getIdAmigo(),
+                    amigo.getNome(),
+                    amigo.getDocumento(),
+                    amigo.getStatus()
+            });
+        }
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
+
+    }//GEN-LAST:event_jButtonBackActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
+        modelo.setRowCount(0); // Limpa a tabela
+
+        List<AmigoBean> amigos = AmigoDao.listarTodosOrdenadosPorNomeAsc();
+
+        for (AmigoBean amigo : amigos) {
+            modelo.addRow(new Object[]{
+                    amigo.getIdAmigo(),
+                    amigo.getNome(),
+                    amigo.getDocumento(),
+                    amigo.getStatus()
+            });
+        }
+
+
+    }
+
 
     /**
      * @param args the command line arguments
@@ -424,6 +523,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonBack;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemSair;
@@ -435,8 +535,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu menuItemSair;
     private javax.swing.JTable tabelaClientes;
     private javax.swing.JTextField txtDocument;
-    private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtIdAmigo;
+    private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtStatus;
     // End of variables declaration//GEN-END:variables
 
@@ -461,7 +561,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void limparCampos() {
         txtIdAmigo.setText("");
         txtNome.setText("");
-        txtStatus.setText("");
+        txtStatus.setText("   ATIVO   ");
         txtDocument.setText("");
     }
 }
