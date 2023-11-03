@@ -23,6 +23,10 @@ public class EditoraBEAN {
         this.status = status;
     }
 
+    public EditoraBEAN(String razaoSocial, String status) {
+        this.razaoSocial = razaoSocial;
+        this.status = status;
+    }
 
     public Integer getIdEditora() {
         return idEditora;
