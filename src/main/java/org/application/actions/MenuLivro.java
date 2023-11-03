@@ -43,12 +43,13 @@ public class MenuLivro {
     }
 
     public static void listarLivros() {
-        List<LivroBean> autores = LivroDao.listarTodas();
-        if (autores.isEmpty()) {
+        List<LivroBean> livros = LivroDao.listarTodas();
+        System.out.println("listando todos os livros" + livros);
+        if (livros.isEmpty()) {
             System.out.println("Nenhum Livro cadastrado.");
         } else {
             System.out.println("\nLista de Livros:");
-            for (LivroBean autor : autores) {
+            for (LivroBean autor : livros) {
                 System.out.println(autor);
             }
         }
@@ -66,7 +67,7 @@ public class MenuLivro {
         Integer id_autor = scanner.nextInt();
 
 
-        LivroBean livro = new LivroBean(null, titulo, status, id_editora, id_autor);
+        LivroBean livro = new LivroBean(null, titulo, status, id_editora, id_autor, null, null);
         LivroDao.inserir(livro);
         System.out.println("Livro inserido com sucesso.");
     }
@@ -93,7 +94,7 @@ public class MenuLivro {
         System.out.print("Status do livro: ");
         String status = scanner.nextLine();
 
-        LivroBean novoLIvro = new LivroBean(idLivro, titulo, status, editora_id, autor_id);
+        LivroBean novoLIvro = new LivroBean(idLivro, titulo, status, editora_id, autor_id, null, null);
         LivroDao.atualizar(novoLIvro);
         System.out.println("Livro atualizado com sucesso.");
     }

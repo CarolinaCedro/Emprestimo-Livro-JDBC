@@ -182,10 +182,13 @@ public class LivroDao {
         return amigos;
     }
 
+
     public static List<LivroBean> listarTodas() {
         List<LivroBean> livros = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Livros";
+        String query = "SELECT l.*, e.razaoSocial AS nome_editora, a.nome AS nome_autor FROM Livros l " +
+                "LEFT JOIN Editoras e ON l.editora_id = e.idEditora " +
+                "LEFT JOIN Autores a ON l.autor_id = a.idAutor";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {
@@ -193,15 +196,49 @@ public class LivroDao {
                 livro.setIdLivro(rs.getInt("idLivro"));
                 livro.setTitulo(rs.getString("titulo"));
                 livro.setStatus(rs.getString("status"));
-                livro.setAutor_id(rs.getInt("autor_id"));
                 livro.setEditora_id(rs.getInt("editora_id"));
+                livro.setEditora_nome(rs.getString("nome_editora")); // Adicionar o nome da editora
+                livro.setAutor_id(rs.getInt("autor_id"));
+                livro.setAutor_nome(rs.getString("nome_autor")); // Adicionar o nome do autor
                 livros.add(livro);
+            }
+            for (LivroBean livro : livros) {
+                System.out.println("ID: " + livro.getIdLivro());
+                System.out.println("Título: " + livro.getTitulo());
+                System.out.println("Status: " + livro.getStatus());
+                System.out.println("Editora ID: " + livro.getEditora_id());
+                System.out.println("Editora Nome: " + livro.getEditora_nome());
+                System.out.println("Autor ID: " + livro.getAutor_id());
+                System.out.println("Autor Nome: " + livro.getAutor_nome());
+                System.out.println();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return livros;
     }
+
+
+//    public static List<LivroBean> listarTodas() {
+//        List<LivroBean> livros = new ArrayList<>();
+//        Connection con = ConnectionMySQLDAO.getConnection();
+//        String query = "SELECT * FROM Livros";
+//        try (PreparedStatement psmt = con.prepareStatement(query)) {
+//            ResultSet rs = psmt.executeQuery();
+//            while (rs.next()) {
+//                LivroBean livro = new LivroBean();
+//                livro.setIdLivro(rs.getInt("idLivro"));
+//                livro.setTitulo(rs.getString("titulo"));
+//                livro.setStatus(rs.getString("status"));
+//                livro.setAutor_id(rs.getInt("autor_id"));
+//                livro.setEditora_id(rs.getInt("editora_id"));
+//                livros.add(livro);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return livros;
+//    }
 
     public static LivroBean buscarLivroPorId(int idLivro) {
         LivroBean livro = null;

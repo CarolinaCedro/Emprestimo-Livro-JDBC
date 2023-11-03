@@ -285,8 +285,8 @@ public class TelaLivroCrud extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                     livro.getIdLivro(),
                     livro.getTitulo(),
-                    livro.getEditora_id(),
-                    livro.getAutor_id(),
+                    livro.getEditora_nome(),
+                    livro.getAutor_nome(),
                     livro.getStatus()
             });
         }
@@ -319,7 +319,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
             System.out.println("o carinha selecionado " + idLivroSelecionado);
 
             // Atualizar um amigo existente com base no ID
-            LivroBean livro = new LivroBean(idLivroSelecionado, tituto, editoraId, autor, editora);
+            LivroBean livro = new LivroBean(idLivroSelecionado, tituto, editoraId, autor, editora, null, null);
             boolean isAtualizado = LivroDao.atualizar(livro);
 
             System.out.println("status atualização " + isAtualizado);
@@ -402,8 +402,8 @@ public class TelaLivroCrud extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                     livro.getIdLivro(),
                     livro.getTitulo(),
-                    livro.getAutor_id(),
-                    livro.getEditora_id(),
+                    livro.getEditora_nome(),
+                    livro.getAutor_nome(),
                     livro.getStatus()
             });
         }
@@ -442,6 +442,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         modelo.setRowCount(0); // Limpa a tabela
 
         List<LivroBean> livros = LivroDao.listarTodosInativos();
+        System.out.println("como esses livros tão chegando" + livros);
         System.out.println(livros);
 
         jButtonBack.setEnabled(true);
@@ -462,7 +463,17 @@ public class TelaLivroCrud extends javax.swing.JFrame {
                 DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
                 modelo.setRowCount(0); // Limpa a tabela
 
-                List<LivroBean> amigos = LivroDao.listarTodosInativos();
+                List<LivroBean> livros = LivroDao.listarTodosInativos();
+
+                for (LivroBean livro : livros) {
+                    modelo.addRow(new Object[]{
+                            livro.getIdLivro(),
+                            livro.getTitulo(),
+                            livro.getEditora_nome(),
+                            livro.getAutor_nome(),
+                            livro.getStatus()
+                    });
+                }
             }
         });
 
@@ -490,9 +501,10 @@ public class TelaLivroCrud extends javax.swing.JFrame {
 
         for (LivroBean livro : livros) {
             modelo.addRow(new Object[]{
+                    livro.getIdLivro(),
                     livro.getTitulo(),
-                    livro.getAutor_id(),
-                    livro.getEditora_id(),
+                    livro.getEditora_nome(),
+                    livro.getAutor_nome(),
                     livro.getStatus()
             });
         }
@@ -523,9 +535,10 @@ public class TelaLivroCrud extends javax.swing.JFrame {
 
         for (LivroBean livro : livros) {
             modelo.addRow(new Object[]{
+                    livro.getIdLivro(),
                     livro.getTitulo(),
-                    livro.getAutor_id(),
-                    livro.getEditora_id(),
+                    livro.getEditora_nome(),
+                    livro.getAutor_nome(),
                     livro.getStatus()
             });
         }
@@ -542,9 +555,10 @@ public class TelaLivroCrud extends javax.swing.JFrame {
 
         for (LivroBean livro : livros) {
             modelo.addRow(new Object[]{
+                    livro.getIdLivro(),
                     livro.getTitulo(),
-                    livro.getAutor_id(),
-                    livro.getEditora_id(),
+                    livro.getEditora_nome(),
+                    livro.getAutor_nome(),
                     livro.getStatus()
             });
         }

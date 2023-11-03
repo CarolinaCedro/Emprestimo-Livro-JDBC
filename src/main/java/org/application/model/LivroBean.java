@@ -16,13 +16,18 @@ public class LivroBean {
     private String status;
     private Integer editora_id;
     private Integer autor_id;
+    private String editora_nome;
+    private String autor_nome;
 
-    public LivroBean(Integer idLivro, String titulo, String status, Integer editora_id, Integer autor_id) {
+
+    public LivroBean(Integer idLivro, String titulo, String status, Integer editora_id, Integer autor_id, String editora_nome, String autor_nome) {
         this.idLivro = idLivro;
         this.titulo = titulo;
         this.status = status;
         this.editora_id = editora_id;
         this.autor_id = autor_id;
+        this.editora_nome = editora_nome;
+        this.autor_nome = autor_nome;
     }
 
     public LivroBean() {
@@ -41,6 +46,22 @@ public class LivroBean {
 
     public void setIdLivro(Integer idLivro) {
         this.idLivro = idLivro;
+    }
+
+    public String getEditora_nome() {
+        return editora_nome;
+    }
+
+    public void setEditora_nome(String editora_nome) {
+        this.editora_nome = editora_nome;
+    }
+
+    public String getAutor_nome() {
+        return autor_nome;
+    }
+
+    public void setAutor_nome(String autor_nome) {
+        this.autor_nome = autor_nome;
     }
 
     public String getTitulo() {
