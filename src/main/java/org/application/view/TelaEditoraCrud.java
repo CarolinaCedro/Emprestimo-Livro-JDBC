@@ -363,6 +363,7 @@ public class TelaEditoraCrud extends JFrame {
 
         for (EditoraBEAN amigo : amigos) {
             modelo.addRow(new Object[]{
+                    amigo.getIdEditora(),
                     amigo.getRazaoSocial(),
                     amigo.getStatus()
             });
@@ -418,6 +419,14 @@ public class TelaEditoraCrud extends JFrame {
                 modelo.setRowCount(0); // Limpa a tabela
 
                 List<EditoraBEAN> amigos = EditoraDao.listarTodosInativos();
+
+                for (EditoraBEAN amigo : amigos) {
+                    modelo.addRow(new Object[]{
+                            amigo.getIdEditora(),
+                            amigo.getRazaoSocial(),
+                            amigo.getStatus()
+                    });
+                }
             }
         });
 
@@ -437,7 +446,7 @@ public class TelaEditoraCrud extends JFrame {
                         }
                     }
 
-                    modelo.setValueAt("ATIVO", selectedRow, 3);
+                    modelo.setValueAt("ATIVO", selectedRow, 2);
 
                 }
             }
@@ -445,6 +454,7 @@ public class TelaEditoraCrud extends JFrame {
 
         for (EditoraBEAN editora : amigos) {
             modelo.addRow(new Object[]{
+                    editora.getIdEditora(),
                     editora.getRazaoSocial(),
                     editora.getStatus()
             });
@@ -568,11 +578,12 @@ public class TelaEditoraCrud extends JFrame {
         return true;
     }
 
+    //Id Razão Social Status
+
     private void initCustomComponents() {
-        modelo.addColumn("Id.Amigo");
-        modelo.addColumn("NOME");
-        modelo.addColumn("DOCUMENTO");
-        modelo.addColumn("STATUS");
+        modelo.addColumn("Id");
+        modelo.addColumn("Razão Social");
+        modelo.addColumn("Status");
 
         tabelaClientes.setModel(modelo);
     }

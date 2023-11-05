@@ -88,12 +88,12 @@ public class EditoraDao {
         return editora;
     }
 
-    public static List<EditoraBEAN> buscarAmigosPorNome(String nome) {
+    public static List<EditoraBEAN> buscarAmigosPorNome(String razao) {
         List<EditoraBEAN> amigos = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Editoras WHERE nome LIKE ?";
+        String query = "SELECT * FROM Editoras WHERE razaoSocial LIKE ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
-            psmt.setString(1, "%" + nome + "%"); // Usando LIKE para buscar nomes parcialmente correspondentes
+            psmt.setString(1, "%" + razao + "%"); // Usando LIKE para buscar nomes parcialmente correspondentes
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {
                 EditoraBEAN amigo = new EditoraBEAN();
@@ -130,7 +130,7 @@ public class EditoraDao {
     public static List<EditoraBEAN> listarTodosOrdenadosPorNomeAsc() {
         List<EditoraBEAN> amigos = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Editoras WHERE status = 'ATIVO' ORDER BY nome ASC";
+        String query = "SELECT * FROM Editoras WHERE status = 'ATIVO' ORDER BY razaoSocial ASC";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {
@@ -149,7 +149,7 @@ public class EditoraDao {
     public static List<EditoraBEAN> listarTodas() {
         List<EditoraBEAN> editoras = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Editoras";
+        String query = "SELECT * FROM Editoras  WHERE status = 'ATIVO'";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {
