@@ -67,6 +67,9 @@ public class TelaAutorCrud extends JFrame {
         lblNome.setText("Nome:");
 
         btnSalvar.setText("Salvar");
+
+        txtStatus.setText("ATIVO");
+        txtStatus.setEnabled(false);
         btnSalvar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 btnSalvarActionPerformed(evt);

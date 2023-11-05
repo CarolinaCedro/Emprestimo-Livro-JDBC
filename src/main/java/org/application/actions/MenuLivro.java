@@ -43,7 +43,7 @@ public class MenuLivro {
     }
 
     public static void listarLivros() {
-        List<LivroBean> livros = LivroDao.listarTodas();
+        List<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
         System.out.println("listando todos os livros" + livros);
         if (livros.isEmpty()) {
             System.out.println("Nenhum Livro cadastrado.");

@@ -30,6 +30,8 @@ public class LivroBean {
         this.autor_nome = autor_nome;
     }
 
+
+
     public LivroBean() {
     }
 
@@ -113,11 +115,13 @@ public class LivroBean {
     @Override
     public String toString() {
         return "LivroBean{" +
-                "idLivros=" + idLivro +
+                "idLivro=" + idLivro +
                 ", titulo='" + titulo + '\'' +
                 ", status='" + status + '\'' +
                 ", editora_id=" + editora_id +
                 ", autor_id=" + autor_id +
+                ", editora_nome='" + editora_nome + '\'' +
+                ", autor_nome='" + autor_nome + '\'' +
                 '}';
     }
 }

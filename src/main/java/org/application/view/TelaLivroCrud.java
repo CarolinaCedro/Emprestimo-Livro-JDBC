@@ -69,6 +69,10 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         lblTitulo.setText("Titulo");
 
         btnSalvar.setText("Salvar");
+
+
+        txtStatus.setText("ATIVO");
+        txtStatus.setEnabled(false);
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalvarActionPerformed(evt);
@@ -278,7 +282,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
         modelo.setRowCount(0); // Limpa a tabela
 
-        List<LivroBean> livros = LivroDao.listarTodas();
+        List<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
         System.out.println("aaaa" + livros);
 
         for (LivroBean livro : livros) {
@@ -319,16 +323,19 @@ public class TelaLivroCrud extends javax.swing.JFrame {
             System.out.println("o carinha selecionado " + idLivroSelecionado);
 
             // Atualizar um amigo existente com base no ID
-            LivroBean livro = new LivroBean(idLivroSelecionado, tituto, editoraId, autor, editora, null, null);
+            LivroBean livro = new LivroBean(idLivroSelecionado, tituto, status, editora, autor, null, null);
             boolean isAtualizado = LivroDao.atualizar(livro);
+
+            LivroBean livroBean = LivroDao.buscarLivroPorId(idLivroSelecionado);
+            System.out.println("trazeno livro selecionado" + livroBean);
 
             System.out.println("status atualização " + isAtualizado);
 
             if (!isAtualizado) {
-                modelo.setValueAt(tituto, linhaSelecionada, 1);
-                modelo.setValueAt(autorId, linhaSelecionada, 2);
-                modelo.setValueAt(editoraId, linhaSelecionada, 3);
-                modelo.setValueAt(status, linhaSelecionada, 4);
+                modelo.setValueAt(livroBean.getTitulo(), linhaSelecionada, 1);
+                modelo.setValueAt(livroBean.getEditora_nome(), linhaSelecionada, 2);
+                modelo.setValueAt(livroBean.getAutor_nome(), linhaSelecionada, 3);
+                modelo.setValueAt(livroBean.getStatus(), linhaSelecionada, 4);
                 limparCampos();
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao atualizar o livro", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
@@ -340,7 +347,8 @@ public class TelaLivroCrud extends javax.swing.JFrame {
 
             if (!isCadastrado) {
                 int idLivro = LivroDao.getLastInsertedId();
-                modelo.addRow(new Object[]{idLivro, amigo.getTitulo(), amigo.getEditora_id(), amigo.getAutor_id(), amigo.getStatus()});
+                LivroBean livroBean = LivroDao.buscarLivroPorId(idLivro);
+                modelo.addRow(new Object[]{idLivro, amigo.getTitulo(), amigo.getEditora_nome(), amigo.getAutor_nome(), amigo.getStatus()});
                 limparCampos();
             } else {
                 JOptionPane.showMessageDialog(null, "Livro já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
@@ -441,7 +449,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
         modelo.setRowCount(0); // Limpa a tabela
 
-        List<LivroBean> livros = LivroDao.listarTodosInativos();
+        List<LivroBean> livros = LivroDao.listarTodosInativosComNomes();
         System.out.println("como esses livros tão chegando" + livros);
         System.out.println(livros);
 
@@ -463,7 +471,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
                 DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
                 modelo.setRowCount(0); // Limpa a tabela
 
-                List<LivroBean> livros = LivroDao.listarTodosInativos();
+                List<LivroBean> livros = LivroDao.listarTodosInativosComNomes();
 
                 for (LivroBean livro : livros) {
                     modelo.addRow(new Object[]{
@@ -493,7 +501,8 @@ public class TelaLivroCrud extends javax.swing.JFrame {
                         }
                     }
 
-                    modelo.setValueAt("ATIVO", selectedRow, 3);
+                    modelo.setValueAt("ATIVO", selectedRow, 4);
+                    System.out.println("aquii mudou");
 
                 }
             }
@@ -517,10 +526,11 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         btnExcluir.setEnabled(true);
         txtTitulo.setEnabled(true);
         txtEditora.setEnabled(true);
+        txtAutor.setEnabled(true);
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
         modelo.setRowCount(0); // Limpa a tabela
 
-        List<LivroBean> amigos = LivroDao.listarTodas();
+
 
         jButtonBack.setEnabled(false);
 
@@ -531,7 +541,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         btnSalvar.setText("Salvar");
 
 
-        List<LivroBean> livros = LivroDao.listarTodosOrdenadosPorNomeAsc();
+        List<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
 
         for (LivroBean livro : livros) {
             modelo.addRow(new Object[]{
