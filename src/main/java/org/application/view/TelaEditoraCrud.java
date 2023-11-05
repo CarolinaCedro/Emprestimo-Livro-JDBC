@@ -64,11 +64,12 @@ public class TelaEditoraCrud extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        txtStatus.setText("ATIVO");
+        txtStatus.setEnabled(false);
+
         lblRazao.setText("Razão Social");
 
         btnSalvar.setText("Salvar");
-        txtStatus.setText("ATIVO");
-        txtStatus.setEnabled(false);
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalvarActionPerformed(evt);
@@ -77,13 +78,13 @@ public class TelaEditoraCrud extends JFrame {
 
         tabelaClientes.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{
-                        {null, null, null},
-                        {null, null, null},
-                        {null, null, null},
-                        {null, null, null}
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
                 },
                 new String[]{
-                        "Title 1", "Title 2", "Title 3",
+                        "Title 1", "Title 2", "Title 3", "Title 4"
                 }
         ));
         tabelaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -132,7 +133,7 @@ public class TelaEditoraCrud extends JFrame {
         jButton3.setText("Atualizar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButton3AtualizarListaPerformed(evt);
             }
         });
 
@@ -171,6 +172,7 @@ public class TelaEditoraCrud extends JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap(94, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jScrollPane1)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(txtIdAmigo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(225, 225, 225)
@@ -189,16 +191,14 @@ public class TelaEditoraCrud extends JFrame {
                                                         .addComponent(btnSalvar)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                         .addComponent(btnExcluir))
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                                .addComponent(lblRazao)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(txtRazao, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(lblStatus)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(lblRazao)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(txtRazao, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(lblStatus)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(jTextField1))
                                 .addGap(119, 119, 119))
         );
@@ -219,15 +219,15 @@ public class TelaEditoraCrud extends JFrame {
                                         .addComponent(btnExcluir))
                                 .addGap(59, 59, 59)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(jButtonBack)))
@@ -324,7 +324,7 @@ public class TelaEditoraCrud extends JFrame {
             txtRazao.setText(editora.getRazaoSocial());
             txtStatus.setText(editora.getStatus());
         } catch (Exception err) {
-            throw new Exception(err);
+            throw new RuntimeException(err);
         }
 
     }//GEN-LAST:event_tabelaClientesMouseClicked
@@ -460,6 +460,15 @@ public class TelaEditoraCrud extends JFrame {
             });
         }
 
+
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                System.out.println("cliclandooooo");
+                jButton3AtualizarListaInativoPerformed(evt);
+            }
+        });
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButtonBackActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
@@ -493,7 +502,7 @@ public class TelaEditoraCrud extends JFrame {
 
     }//GEN-LAST:event_jButtonBackActionPerformed
 
-    private void jButton3ActionPerformed(ActionEvent evt) {
+    private void jButton3AtualizarListaPerformed(ActionEvent evt) {
 
 
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
@@ -508,9 +517,25 @@ public class TelaEditoraCrud extends JFrame {
                     editora.getStatus()
             });
         }
-
-
     }
+
+    private void jButton3AtualizarListaInativoPerformed(ActionEvent evt) {
+
+
+        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
+        modelo.setRowCount(0); // Limpa a tabela
+
+        List<EditoraBEAN> editoras = EditoraDao.listarTodosInativos();
+
+        for (EditoraBEAN editora : editoras) {
+            modelo.addRow(new Object[]{
+                    editora.getIdEditora(),
+                    editora.getRazaoSocial(),
+                    editora.getStatus()
+            });
+        }
+    }
+
 
 
     /**
