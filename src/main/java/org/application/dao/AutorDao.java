@@ -155,7 +155,7 @@ public class AutorDao {
     public static List<AutorBean> listarTodas() {
         List<AutorBean> autors = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Autores";
+        String query = "SELECT * FROM Autores WHERE status = 'ATIVO'";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {

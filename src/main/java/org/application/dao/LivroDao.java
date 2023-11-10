@@ -108,16 +108,23 @@ public class LivroDao {
     public static List<LivroBean> listarTodosOrdenadosPorNomeAsc() {
         List<LivroBean> livros = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Livros WHERE status = 'ATIVO' ORDER BY titulo ASC";
+        String query = "SELECT l.*, e.razaoSocial AS nome_editora, a.nome AS nome_autor " +
+                "FROM Livros l " +
+                "LEFT JOIN Editoras e ON l.editora_id = e.idEditora " +
+                "LEFT JOIN Autores a ON l.autor_id = a.idAutor " +
+                "WHERE l.status = 'ATIVO' ORDER BY titulo ASC";
+//        String query = "SELECT * FROM Livros WHERE status = 'ATIVO' ORDER BY titulo ASC";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {
                 LivroBean livro = new LivroBean();
                 livro.setIdLivro(rs.getInt("idLivro"));
                 livro.setTitulo(rs.getString("titulo"));
-                livro.setEditora_id(rs.getInt("editora_id"));
-                livro.setAutor_id(rs.getInt("autor_id"));
                 livro.setStatus(rs.getString("status"));
+                livro.setEditora_id(rs.getInt("editora_id"));
+                livro.setEditora_nome(rs.getString("nome_editora")); // Adicionar o nome da editora
+                livro.setAutor_id(rs.getInt("autor_id"));
+                livro.setAutor_nome(rs.getString("nome_autor")); // Adicionar o nome do autor
                 livros.add(livro);
             }
         } catch (SQLException e) {
@@ -168,7 +175,13 @@ public class LivroDao {
     public static List<LivroBean> buscarLivroPorNome(String titulo) {
         List<LivroBean> amigos = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Livros WHERE titulo LIKE ?";
+        String query = "SELECT l.*, e.razaoSocial AS nome_editora, a.nome AS nome_autor " +
+                "FROM Livros l " +
+                "LEFT JOIN Editoras e ON l.editora_id = e.idEditora " +
+                "LEFT JOIN Autores a ON l.autor_id = a.idAutor " +
+                "WHERE l.titulo LIKE ?";
+
+//        String query = "SELECT * FROM Livros WHERE titulo LIKE ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             psmt.setString(1, "%" + titulo + "%"); // Usando LIKE para buscar nomes parcialmente correspondentes
             ResultSet rs = psmt.executeQuery();
@@ -176,9 +189,11 @@ public class LivroDao {
                 LivroBean livro = new LivroBean();
                 livro.setIdLivro(rs.getInt("idLivro"));
                 livro.setTitulo(rs.getString("titulo"));
-                livro.setEditora_id(rs.getInt("editora_id"));
-                livro.setAutor_id(rs.getInt("autor_id"));
                 livro.setStatus(rs.getString("status"));
+                livro.setEditora_id(rs.getInt("editora_id"));
+                livro.setEditora_nome(rs.getString("nome_editora")); // Adicionar o nome da editora
+                livro.setAutor_id(rs.getInt("autor_id"));
+                livro.setAutor_nome(rs.getString("nome_autor")); // Adicionar o nome do autor
                 amigos.add(livro);
             }
         } catch (SQLException e) {

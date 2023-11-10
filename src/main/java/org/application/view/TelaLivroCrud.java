@@ -348,7 +348,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
             if (!isCadastrado) {
                 int idLivro = LivroDao.getLastInsertedId();
                 LivroBean livroBean = LivroDao.buscarLivroPorId(idLivro);
-                modelo.addRow(new Object[]{idLivro, amigo.getTitulo(), amigo.getEditora_nome(), amigo.getAutor_nome(), amigo.getStatus()});
+                modelo.addRow(new Object[]{idLivro, livroBean.getTitulo(), livroBean.getEditora_nome(), livroBean.getAutor_nome(), livroBean.getStatus()});
                 limparCampos();
             } else {
                 JOptionPane.showMessageDialog(null, "Livro já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
