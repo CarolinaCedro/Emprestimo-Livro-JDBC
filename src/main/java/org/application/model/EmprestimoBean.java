@@ -6,17 +6,26 @@ import java.util.List;
 public class EmprestimoBean {
 
     private Integer idEmprestimo;
-    private Date data;
-    private String situacao;
-
-    // Relacionamento muitos para muitos entre Livro e Amigo
-    private List<LivroBean> livrosEmprestados;
-    private List<AmigoBean> amigosQuePegaramLivros;
+    private Date dataEmprestimo;
+    private Date dataDevolucao;
+    private String descricao;
+    private List<LivroBean> listaLivros;
+    private AmigoBean amigo;
+    private String status;
 
     public EmprestimoBean() {
     }
 
-    // Métodos getters e setters
+    public EmprestimoBean(Integer idEmprestimo, Date dataEmprestimo, Date dataDevolucao, String descricao, List<LivroBean> listaLivros, List<AmigoBean> amigosQuePegaramLivros, AmigoBean amigo, String status) {
+        this.idEmprestimo = idEmprestimo;
+        this.dataEmprestimo = dataEmprestimo;
+        this.dataDevolucao = dataDevolucao;
+        this.descricao = descricao;
+        this.listaLivros = listaLivros;
+        this.amigosQuePegaramLivros = amigosQuePegaramLivros;
+        this.amigo = amigo;
+        this.status = status;
+    }
 
     public Integer getIdEmprestimo() {
         return idEmprestimo;
@@ -26,28 +35,52 @@ public class EmprestimoBean {
         this.idEmprestimo = idEmprestimo;
     }
 
-    public Date getData() {
-        return data;
+    public Date getDataEmprestimo() {
+        return dataEmprestimo;
     }
 
-    public void setData(Date data) {
-        this.data = data;
+    public void setDataEmprestimo(Date dataEmprestimo) {
+        this.dataEmprestimo = dataEmprestimo;
     }
 
-    public String getSituacao() {
-        return situacao;
+    public Date getDataDevolucao() {
+        return dataDevolucao;
     }
 
-    public void setSituacao(String situacao) {
-        this.situacao = situacao;
+    public void setDataDevolucao(Date dataDevolucao) {
+        this.dataDevolucao = dataDevolucao;
     }
 
-    public List<LivroBean> getLivrosEmprestados() {
-        return livrosEmprestados;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setLivrosEmprestados(List<LivroBean> livrosEmprestados) {
-        this.livrosEmprestados = livrosEmprestados;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public List<LivroBean> getListaLivros() {
+        return listaLivros;
+    }
+
+    public void setListaLivros(List<LivroBean> listaLivros) {
+        this.listaLivros = listaLivros;
+    }
+
+    public AmigoBean getAmigo() {
+        return amigo;
+    }
+
+    public void setAmigo(AmigoBean amigo) {
+        this.amigo = amigo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<AmigoBean> getAmigosQuePegaramLivros() {
@@ -58,16 +91,16 @@ public class EmprestimoBean {
         this.amigosQuePegaramLivros = amigosQuePegaramLivros;
     }
 
-
     @Override
     public String toString() {
-        return "Emprestimo" + "\n" +
-                "Id Emprestimo " + idEmprestimo + "\n" +
-                "Data " + data + "\n" +
-                "Situacacao " + situacao + "\n" +
-                "Livros Emprestados " + livrosEmprestados + "\n" +
-                "Amigos que Pegaram o Livro " + amigosQuePegaramLivros + "\n" ;
-
+        return "EmprestimoBean{" +
+                "idEmprestimo=" + idEmprestimo +
+                ", dataEmprestimo=" + dataEmprestimo +
+                ", dataDevolucao=" + dataDevolucao +
+                ", descricao='" + descricao + '\'' +
+                ", listaLivros=" + listaLivros +
+                ", amigo=" + amigo +
+                ", status='" + status + '\'' +
+                '}';
     }
-
 }

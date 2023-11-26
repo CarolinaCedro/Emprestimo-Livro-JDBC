@@ -7,38 +7,38 @@ import org.application.model.AmigoBean;
 import org.application.model.EmprestimoBean;
 import org.application.model.LivroBean;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 public class Main {
 
-
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws SQLException {
 
         List<LivroBean> livros;
-        List<AmigoBean> amigos;
+        AmigoBean amigoBean;
 
+        // Supondo que esses métodos existam e funcionem corretamente
         livros = LivroDao.listarTodosOrdenadosPorNomeAsc();
-        amigos = AmigoDao.listarTodos();
-
+        amigoBean = AmigoDao.buscarAmigoPorId(8);
 
         EmprestimoDao.criarTabelaEmprestimos();
 
-
         EmprestimoBean emprestimo = new EmprestimoBean();
-        emprestimo.setData(new Date());
-        emprestimo.setSituacao("Em andamento");
+        emprestimo.setDataEmprestimo(new Date());
+        emprestimo.setDataDevolucao(new Date());
+        emprestimo.setDescricao("Imprestimo Livro");
+        emprestimo.setStatus("Disponivel");
 
         // Adicionar livros e amigos ao empréstimo
-        emprestimo.setLivrosEmprestados(livros);
-        emprestimo.setAmigosQuePegaramLivros(amigos);
+        emprestimo.setListaLivros(livros);
+        emprestimo.setAmigo(amigoBean);
 
+        // Inserir o empréstimo no banco de dados
+        EmprestimoDao.inserirLivrosEmprestimo(emprestimo);
 
-        EmprestimoDao.inserir(emprestimo);
-
-
-        EmprestimoBean emprestimoConsultado = EmprestimoDao.buscarEmprestimoPorId(emprestimo.getIdEmprestimo());
+        // Consultar o empréstimo por ID
+        List<EmprestimoBean> emprestimoConsultado = EmprestimoDao.listarTodosEmprestimos();
         System.out.println("Empréstimo Consultado: " + emprestimoConsultado);
 
 //        // Exemplo de consulta: buscar empréstimos por situação
@@ -46,3 +46,4 @@ public class Main {
 //        System.out.println("Empréstimos por Situação 'Em andamento': " + emprestimosPorSituacao);
     }
 }
+
