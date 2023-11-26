@@ -6,7 +6,7 @@
 package org.application.view;
 
 
-import org.application.dao.EditoraDao;
+import org.application.controller.dao.EditoraDao;
 import org.application.model.EditoraBEAN;
 
 import javax.swing.*;
@@ -282,11 +282,6 @@ public class TabsJFrame extends javax.swing.JFrame {
         String razaoSocial = txtNome.getText();
         String status = txtCPF.getText();
 
-//        String end = txtEndereco.getText();
-//        String num = txtNumero.getText();
-//        String cidade = txtCidade.getText();
-//        String estado = txtEstado.getText();
-
 
         if (!isCamposValidos(id, razaoSocial, status)) {
             JOptionPane.showMessageDialog(this, "Faltam preencher campos obrigatórios");
@@ -294,7 +289,6 @@ public class TabsJFrame extends javax.swing.JFrame {
         }
 
         EditoraBEAN cliente = new EditoraBEAN();
-//        Boolean isCadastrado = editoraDao.cadastrar(cliente);
         Boolean isCadastrado = true;
 
         if (isCadastrado) {
@@ -311,25 +305,11 @@ public class TabsJFrame extends javax.swing.JFrame {
         int linhaSelecionada = jTable1.getSelectedRow();
         Long cpf = (Long) jTable1.getValueAt(linhaSelecionada, 1);
 
-//        EditoraDao cliente  = this.editoraDao.consultar(cpf);
-//
-//        if (cliente != null) {
-//            txtNome.setText(cliente.getNome());
-//            txtCPF.setText(cliente.getCpf().toString());
-//            txtTel.setText(cliente.getTel().toString());
-//            txtEndereco.setText(cliente.getEnd());
-//            txtNumero.setText(cliente.getNumero().toString());
-//            txtCidade.setText(cliente.getCidade());
-//            txtEstado.setText(cliente.getEstado());
-//
-//        }
-//
-        //txtNome.setText(nome);
-    }//GEN-LAST:event_jTable1MouseClicked
+    }
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         limparCampos();
-    }//GEN-LAST:event_btnLimparActionPerformed
+    }
 
     private void btnAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtualizarActionPerformed
         int linhaSelecionada = jTable1.getSelectedRow();
@@ -349,11 +329,6 @@ public class TabsJFrame extends javax.swing.JFrame {
                 return;
             }
 
-//            Cliente clienteNovo = new Cliente(nome, cpf.toString(), tel, end, num, cidade, estado);
-//            this.editoraDao.alterar(clienteNovo);
-//
-//            modelo.removeRow(linhaSelecionada);
-//            modelo.addRow(new Object[]{clienteNovo.getNome(), clienteNovo.getCpf(), clienteNovo.getTel(), clienteNovo.getEnd()});
 
             JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             limparCampos();
@@ -375,7 +350,7 @@ public class TabsJFrame extends javax.swing.JFrame {
             if (result == JOptionPane.YES_OPTION) {
 
                 Long cpf = (Long) jTable1.getValueAt(linhaSelecionada, 1);
-//                this.editoraDao.excluir(cpf);
+
                 modelo.removeRow(linhaSelecionada);
 
                 JOptionPane.showMessageDialog(null, "Cliente excluído com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);

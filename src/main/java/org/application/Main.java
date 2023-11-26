@@ -1,75 +1,48 @@
 package org.application;
 
-import org.application.actions.MenuAmigo;
-import org.application.actions.MenuAutor;
-import org.application.actions.MenuEditora;
-import org.application.actions.MenuLivro;
-import org.application.config.ConnectionMySQLDAO;
-import org.application.dao.AmigoDao;
-import org.application.dao.AutorDao;
-import org.application.dao.EditoraDao;
-import org.application.dao.LivroDao;
+import org.application.controller.dao.AmigoDao;
+import org.application.controller.dao.EmprestimoDao;
+import org.application.controller.dao.LivroDao;
+import org.application.model.AmigoBean;
+import org.application.model.EmprestimoBean;
+import org.application.model.LivroBean;
 
-import java.util.Scanner;
+import java.util.Date;
+import java.util.List;
 
 public class Main {
 
+
     public static void main(String[] args) {
-        ConnectionMySQLDAO.getConnection();
-        Scanner scanner = new Scanner(System.in);
-        MenuAutor menuAutor = new MenuAutor();
-        MenuEditora menuEditora = new MenuEditora();
-        MenuLivro menuLivro = new MenuLivro();
-        MenuAmigo menuAmigo = new MenuAmigo();
 
-        while (true) {
-            System.out.println("Escolha uma opção:");
-            System.out.println("1. Amigo");
-            System.out.println("2. Autor");
-            System.out.println("3. Editora");
-            System.out.println("4. Livro");
-            System.out.println("5. Criar Tabelas");
-            System.out.println("0. Sair");
-            System.out.print("Opção: ");
 
-            int opcao = scanner.nextInt();
+        List<LivroBean> livros;
+        List<AmigoBean> amigos;
 
-            switch (opcao) {
-                case 1:
-                    menuAmigo.exibirMenuAmigos();
-                    break;
-                case 2:
-                    menuAutor.exibirMenuAutores();
-                    break;
-                case 3:
-                    menuEditora.exibirMenuAutores();
-                    break;
-                case 4:
-                    menuLivro.exibirMenuLivros();
-                    break;
-                case 5:
-                    criarTabelas();
-                    break;
-                case 0:
-                    System.out.println("Encerrando o programa.");
-                    scanner.close();
-                    System.exit(0);
-                default:
-                    System.out.println("Opção inválida. Tente novamente.");
-            }
-        }
+        livros = LivroDao.listarTodosOrdenadosPorNomeAsc();
+        amigos = AmigoDao.listarTodos();
+
+
+        EmprestimoDao.criarTabelaEmprestimos();
+
+
+        EmprestimoBean emprestimo = new EmprestimoBean();
+        emprestimo.setData(new Date());
+        emprestimo.setSituacao("Em andamento");
+
+        // Adicionar livros e amigos ao empréstimo
+        emprestimo.setLivrosEmprestados(livros);
+        emprestimo.setAmigosQuePegaramLivros(amigos);
+
+
+        EmprestimoDao.inserir(emprestimo);
+
+
+        EmprestimoBean emprestimoConsultado = EmprestimoDao.buscarEmprestimoPorId(emprestimo.getIdEmprestimo());
+        System.out.println("Empréstimo Consultado: " + emprestimoConsultado);
+
+//        // Exemplo de consulta: buscar empréstimos por situação
+//        List<EmprestimoBean> emprestimosPorSituacao = EmprestimoDao.buscarEmprestimosPorSituacao("Em andamento");
+//        System.out.println("Empréstimos por Situação 'Em andamento': " + emprestimosPorSituacao);
     }
-
-    private static void criarTabelas() {
-        try {
-            EditoraDao.criarTabelaEditoras();
-            AutorDao.criarTabelaAutores();
-            LivroDao.criarTabelaLivros();
-            AmigoDao.criarTabelaAmigos();
-
-        } catch (Throwable err) {
-            System.out.println(err);
-        }
-    }
-
 }

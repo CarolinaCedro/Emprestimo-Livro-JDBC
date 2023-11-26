@@ -1,12 +1,6 @@
 package org.application.model;
 
 
-//idAmigo int
-//        nome
-//        documento
-//        status
-
-import org.application.enums.Status;
 
 import java.util.Objects;
 

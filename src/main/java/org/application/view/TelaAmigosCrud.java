@@ -6,7 +6,7 @@
 package org.application.view;
 
 
-import org.application.dao.AmigoDao;
+import org.application.controller.dao.AmigoDao;
 import org.application.model.AmigoBean;
 
 import javax.swing.*;

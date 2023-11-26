@@ -6,7 +6,7 @@
 package org.application.view;
 
 
-import org.application.dao.LivroDao;
+import org.application.controller.dao.LivroDao;
 import org.application.model.LivroBean;
 
 import javax.swing.*;

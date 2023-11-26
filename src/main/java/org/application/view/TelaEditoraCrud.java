@@ -6,7 +6,7 @@
 package org.application.view;
 
 
-import org.application.dao.EditoraDao;
+import org.application.controller.dao.EditoraDao;
 import org.application.model.EditoraBEAN;
 
 import javax.swing.*;

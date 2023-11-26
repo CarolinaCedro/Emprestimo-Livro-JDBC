@@ -6,7 +6,7 @@
 package org.application.view;
 
 
-import org.application.dao.AutorDao;
+import org.application.controller.dao.AutorDao;
 import org.application.model.AutorBean;
 
 import javax.swing.*;

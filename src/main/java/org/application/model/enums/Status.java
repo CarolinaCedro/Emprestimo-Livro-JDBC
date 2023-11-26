@@ -1,4 +1,4 @@
-package org.application.enums;
+package org.application.model.enums;
 
 public enum Status {
     ATIVO("Ativo"),

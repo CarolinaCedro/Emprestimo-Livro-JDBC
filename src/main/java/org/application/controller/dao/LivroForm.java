@@ -1,4 +1,4 @@
-package org.application.dao;
+package org.application.controller.dao;
 
 import javax.swing.*;
 import java.awt.*;
