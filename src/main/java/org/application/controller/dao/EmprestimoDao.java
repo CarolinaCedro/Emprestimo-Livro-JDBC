@@ -5,17 +5,14 @@ import org.application.model.AmigoBean;
 import org.application.model.EmprestimoBean;
 import org.application.model.LivroBean;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class EmprestimoDao {
 
-    public static void criarTabelaEmprestimos() {
+    public static void criarTabelasEmprestimos() {
         Connection con = ConnectionMySQLDAO.getConnection();
 
         // Criar tabela Emprestimos
@@ -24,39 +21,30 @@ public class EmprestimoDao {
                 "dataEmprestimo DATE NOT NULL," +
                 "dataDevolucao DATE NOT NULL," +
                 "descricao VARCHAR(255) NOT NULL," +
-                "status VARCHAR(15) NOT NULL" +
+                "idAmigo INT," +
+                "status VARCHAR(15) NOT NULL," +
+                "FOREIGN KEY (idAmigo) REFERENCES Amigos(idAmigo)" +
                 ")";
 
-
-        // Criar tabela Livros_Emprestimos
-        String queryLivrosEmprestimos = "CREATE TABLE IF NOT EXISTS Livros_Emprestimos (" +
+        // Criar tabela Emprestimo_has_livros
+        String queryEmprestimoLivros = "CREATE TABLE IF NOT EXISTS Emprestimo_has_livros (" +
                 "idEmprestimo INT," +
                 "idLivro INT," +
+                "PRIMARY KEY (idEmprestimo, idLivro)," +
                 "FOREIGN KEY (idEmprestimo) REFERENCES Emprestimos(idEmprestimo)," +
-                "FOREIGN KEY (idLivro) REFERENCES Livros(idLivro)," +
-                "PRIMARY KEY (idEmprestimo, idLivro)" +
-                ")";
-
-        // Criar tabela Amigos_Emprestimos
-        String queryAmigosEmprestimos = "CREATE TABLE IF NOT EXISTS Amigos_Emprestimos (" +
-                "idEmprestimo INT," +
-                "idAmigo INT," +
-                "FOREIGN KEY (idEmprestimo) REFERENCES Emprestimos(idEmprestimo)," +
-                "FOREIGN KEY (idAmigo) REFERENCES Amigos(idAmigo)," +
-                "PRIMARY KEY (idEmprestimo, idAmigo)" +
+                "FOREIGN KEY (idLivro) REFERENCES Livros(idLivro)" +
                 ")";
 
         try (PreparedStatement psmtEmprestimos = con.prepareStatement(queryEmprestimos);
-             PreparedStatement psmtLivrosEmprestimos = con.prepareStatement(queryLivrosEmprestimos);
-             PreparedStatement psmtAmigosEmprestimos = con.prepareStatement(queryAmigosEmprestimos)) {
+             PreparedStatement psmtEmprestimoLivros = con.prepareStatement(queryEmprestimoLivros)) {
             psmtEmprestimos.execute();
-            psmtLivrosEmprestimos.execute();
-            psmtAmigosEmprestimos.execute();
-            System.out.println("Tabelas Emprestimos, Livros_Emprestimos e Amigos_Emprestimos criadas com sucesso.");
+            psmtEmprestimoLivros.execute();
+            System.out.println("Tabelas Emprestimos e Emprestimo_has_livros criadas com sucesso.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     public static EmprestimoBean buscarEmprestimoPorId(int idEmprestimo) {
         EmprestimoBean emprestimo = null;
@@ -82,7 +70,7 @@ public class EmprestimoDao {
     }
 
 
-    public static List<EmprestimoBean> listarTodosEmprestimos() {
+    public static List<EmprestimoBean> listarTodosEmprestimosDetalhados() {
         List<EmprestimoBean> emprestimos = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "SELECT * FROM Emprestimos";
@@ -95,8 +83,16 @@ public class EmprestimoDao {
                 emprestimo.setDataEmprestimo(rs.getDate("dataEmprestimo"));
                 emprestimo.setDataDevolucao(rs.getDate("dataDevolucao"));
                 emprestimo.setStatus(rs.getString("status"));
-                emprestimo.setListaLivros(buscarLivrosPorEmprestimo(con, emprestimo.getIdEmprestimo()));
-                emprestimo.setAmigo(buscarAmigoPorEmprestimo(con, emprestimo.getIdEmprestimo()));
+
+                // Buscar livros associados ao empréstimo
+                List<LivroBean> livros = buscarLivrosPorEmprestimo(con, emprestimo.getIdEmprestimo());
+                System.out.println("Aqui a lista de todos os ids que traz no metodo no dao" + livros);
+                emprestimo.setListaLivros(livros);
+
+                // Buscar amigo associado ao empréstimo
+                AmigoBean amigo = buscarAmigoPorEmpresti(con, emprestimo.getIdEmprestimo());
+                emprestimo.setAmigo(amigo);
+
                 emprestimos.add(emprestimo);
             }
         } catch (SQLException e) {
@@ -105,12 +101,31 @@ public class EmprestimoDao {
         return emprestimos;
     }
 
+    public static AmigoBean buscarAmigoPorEmpresti(Connection con, int idEmprestimo) throws SQLException {
+        AmigoBean amigo = null;
+        String query = "SELECT Amigos.* FROM Amigos " +
+                "INNER JOIN Emprestimos ON Amigos.idAmigo = Emprestimos.idAmigo " +
+                "WHERE Emprestimos.idEmprestimo = ?";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.setInt(1, idEmprestimo);
+            ResultSet rs = psmt.executeQuery();
+            if (rs.next()) {
+                amigo = new AmigoBean();
+                amigo.setIdAmigo(rs.getInt("idAmigo"));
+                amigo.setNome(rs.getString("nome"));
+                amigo.setDocumento(rs.getString("documento"));
+                amigo.setStatus(rs.getString("status"));
+            }
+        }
+        return amigo;
+    }
+
 
     public static List<LivroBean> buscarLivrosPorEmprestimo(Connection con, int idEmprestimo) throws SQLException {
         List<LivroBean> livros = new ArrayList<>();
         String query = "SELECT Livros.* FROM Livros " +
-                "INNER JOIN Livros_Emprestimos ON Livros.idLivro = Livros_Emprestimos.idLivro " +
-                "WHERE Livros_Emprestimos.idEmprestimo = ?";
+                "INNER JOIN Emprestimo_has_livros ON Livros.idLivro = Emprestimo_has_livros.idLivro " +
+                "WHERE Emprestimo_has_livros.idEmprestimo = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             psmt.setInt(1, idEmprestimo);
             ResultSet rs = psmt.executeQuery();
@@ -123,6 +138,7 @@ public class EmprestimoDao {
                 livros.add(livro);
             }
         }
+
         return livros;
     }
 
@@ -146,31 +162,73 @@ public class EmprestimoDao {
 
     }
 
-    public static void inserirLivrosEmprestimo(EmprestimoBean emprestimo) throws SQLException {
-        String query = "INSERT INTO Livros_Emprestimos (idEmprestimo, idLivro) VALUES (?, ?)";
+
+    public static void inserirEmprestimo(EmprestimoBean emprestimo) {
         Connection con = ConnectionMySQLDAO.getConnection();
+
+        String queryEmprestimo = "INSERT INTO Emprestimos (dataEmprestimo, dataDevolucao, descricao, idAmigo, status) VALUES (?, ?, ?, ?, ?)";
+        String queryEmprestimoLivros = "INSERT INTO Emprestimo_has_livros (idEmprestimo, idLivro) VALUES (?, ?)";
+
+        try (PreparedStatement psmtEmprestimo = con.prepareStatement(queryEmprestimo, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement psmtEmprestimoLivros = con.prepareStatement(queryEmprestimoLivros)) {
+            con.setAutoCommit(false);
+
+            psmtEmprestimo.setDate(1, new java.sql.Date(emprestimo.getDataEmprestimo().getTime()));
+            psmtEmprestimo.setDate(2, new java.sql.Date(emprestimo.getDataDevolucao().getTime()));
+            psmtEmprestimo.setString(3, emprestimo.getDescricao());
+            psmtEmprestimo.setInt(4, emprestimo.getAmigo().getIdAmigo());
+            psmtEmprestimo.setString(5, emprestimo.getStatus());
+
+            int affectedRows = psmtEmprestimo.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("A inserção do empréstimo falhou, nenhuma linha afetada.");
+            }
+
+            try (ResultSet generatedKeys = psmtEmprestimo.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    emprestimo.setIdEmprestimo(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("A inserção do empréstimo falhou, nenhum ID obtido.");
+                }
+            }
+
+            // Inserir os livros associados ao empréstimo na tabela Emprestimo_has_livros
+            for (LivroBean livro : emprestimo.getListaLivros()) {
+                psmtEmprestimoLivros.setInt(1, emprestimo.getIdEmprestimo());
+                psmtEmprestimoLivros.setInt(2, livro.getIdLivro());
+                psmtEmprestimoLivros.addBatch();
+            }
+
+            psmtEmprestimoLivros.executeBatch();
+            con.commit();
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                con.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private static void inserirLivrosEmprestimo(Connection con, EmprestimoBean emprestimo) throws SQLException {
+        String query = "INSERT INTO Livros_Emprestimos (idEmprestimo, idLivro) VALUES (?, ?)";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             for (LivroBean livro : emprestimo.getListaLivros()) {
                 psmt.setInt(1, emprestimo.getIdEmprestimo());
                 psmt.setInt(2, livro.getIdLivro());
-                psmt.executeUpdate();
+                psmt.addBatch();  // Adicionar a operação ao lote (batch)
             }
+            psmt.executeBatch();  // Executar todas as operações do lote
         }
     }
-
-    public static void inserirAmigosEmprestimo(Connection con, EmprestimoBean emprestimo) throws SQLException {
-        String query = "INSERT INTO Amigos_Emprestimos (idEmprestimo, idAmigo) VALUES (?, ?)";
-        try (PreparedStatement psmt = con.prepareStatement(query)) {
-            for (AmigoBean amigo : emprestimo.getAmigosQuePegaramLivros()) {
-                psmt.setInt(1, emprestimo.getIdEmprestimo());
-                psmt.setInt(2, amigo.getIdAmigo());
-                psmt.executeUpdate();
-            }
-        }
-    }
-
-
-
 
 
 }

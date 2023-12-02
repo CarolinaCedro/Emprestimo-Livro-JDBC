@@ -16,13 +16,12 @@ public class EmprestimoBean {
     public EmprestimoBean() {
     }
 
-    public EmprestimoBean(Integer idEmprestimo, Date dataEmprestimo, Date dataDevolucao, String descricao, List<LivroBean> listaLivros, List<AmigoBean> amigosQuePegaramLivros, AmigoBean amigo, String status) {
+    public EmprestimoBean(Integer idEmprestimo, Date dataEmprestimo, Date dataDevolucao, String descricao, List<LivroBean> listaLivros, AmigoBean amigo, String status) {
         this.idEmprestimo = idEmprestimo;
         this.dataEmprestimo = dataEmprestimo;
         this.dataDevolucao = dataDevolucao;
         this.descricao = descricao;
         this.listaLivros = listaLivros;
-        this.amigosQuePegaramLivros = amigosQuePegaramLivros;
         this.amigo = amigo;
         this.status = status;
     }
@@ -83,24 +82,18 @@ public class EmprestimoBean {
         this.status = status;
     }
 
-    public List<AmigoBean> getAmigosQuePegaramLivros() {
-        return amigosQuePegaramLivros;
-    }
 
-    public void setAmigosQuePegaramLivros(List<AmigoBean> amigosQuePegaramLivros) {
-        this.amigosQuePegaramLivros = amigosQuePegaramLivros;
-    }
 
     @Override
     public String toString() {
-        return "EmprestimoBean{" +
-                "idEmprestimo=" + idEmprestimo +
-                ", dataEmprestimo=" + dataEmprestimo +
-                ", dataDevolucao=" + dataDevolucao +
-                ", descricao='" + descricao + '\'' +
-                ", listaLivros=" + listaLivros +
-                ", amigo=" + amigo +
-                ", status='" + status + '\'' +
-                '}';
+        return "** Emprestimos ** " + "\n" +
+                "Id Emprestimo = " + idEmprestimo + "\n" +
+                "DataEmprestimo = " + dataEmprestimo + "\n" +
+                "DataDevolucao = " + dataDevolucao + "\n" +
+                "Descricao = " + descricao + "\n" +
+                "Lista de Livros = " + listaLivros + "\n" +
+                "Amigo = " + amigo + "\n" +
+                "Status = " + status + "\n \n";
+
     }
 }
