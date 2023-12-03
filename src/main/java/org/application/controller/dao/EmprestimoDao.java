@@ -5,7 +5,11 @@ import org.application.model.AmigoBean;
 import org.application.model.EmprestimoBean;
 import org.application.model.LivroBean;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -230,5 +234,14 @@ public class EmprestimoDao {
         }
     }
 
+    public static List<EmprestimoBean> buscarLivroPorNome(String filtroNome) {
+        List<EmprestimoBean> list = new ArrayList<>();
+        System.out.println("filtra por descricação");
+        return list;
+    }
 
+
+    public void excluir(Integer id) {
+        System.out.println("delete");
+    }
 }

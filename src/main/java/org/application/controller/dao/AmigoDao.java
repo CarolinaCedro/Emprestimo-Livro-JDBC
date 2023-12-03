@@ -212,6 +212,20 @@ public class AmigoDao {
     }
 
 
-
+    public static List<String> listarNomesAmigos() {
+        List<String> nomesAmigos = new ArrayList<>();
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT nome FROM Amigos WHERE status = 'ATIVO'";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                String nomeAmigo = rs.getString("nome");
+                nomesAmigos.add(nomeAmigo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nomesAmigos;
+    }
 
 }
