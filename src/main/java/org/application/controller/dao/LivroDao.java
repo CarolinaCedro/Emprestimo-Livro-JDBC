@@ -1,7 +1,6 @@
 package org.application.controller.dao;
 
-
-import org.application.config.ConnectionMySQLDAO;
+import org.application.controller.config.ConnectionMySQLDAO;
 import org.application.model.LivroBean;
 
 import java.sql.Connection;

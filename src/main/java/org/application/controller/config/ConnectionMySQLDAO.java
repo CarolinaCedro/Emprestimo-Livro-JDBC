@@ -1,4 +1,4 @@
-package org.application.config;
+package org.application.controller.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ConnectionMySQLDAO {
     // Constantes para o driver JDBC, URL do banco de dados e credenciais de acesso.
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String DBURL = "jdbc:mysql://localhost:3306/mysql-facul";
+    private static final String DBURL = "jdbc:mysql://localhost:3306/mysql_facul";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "123456";
 

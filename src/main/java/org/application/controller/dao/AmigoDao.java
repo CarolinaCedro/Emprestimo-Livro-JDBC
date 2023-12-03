@@ -1,6 +1,7 @@
 package org.application.controller.dao;
 
-import org.application.config.ConnectionMySQLDAO;
+
+import org.application.controller.config.ConnectionMySQLDAO;
 import org.application.model.AmigoBean;
 
 import java.sql.Connection;
@@ -11,6 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AmigoDao {
+
+    public static void createDataBase() {
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "CREATE DATABASE mysql_facul";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.execute();
+            System.out.println("Banco de dados criado");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void criarTabelaAmigos() {
         Connection con = ConnectionMySQLDAO.getConnection();
