@@ -5,8 +5,9 @@
  */
 package org.application.view;
 
+import org.application.view.dialogAlerts.ConfirmDialog;
+
 import javax.swing.*;
-import java.awt.*;
 
 public class PrincipalJFrame extends javax.swing.JFrame {
 
@@ -28,9 +29,9 @@ public class PrincipalJFrame extends javax.swing.JFrame {
 
         jInternalFrameClientes = new javax.swing.JInternalFrame();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        cadastrarAmigo = new javax.swing.JButton();
+        cadastrarLivro = new javax.swing.JButton();
+        cadastrarEmprestimo = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuOpcoes = new javax.swing.JMenu();
@@ -60,21 +61,33 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Noto Sans Mono CJK JP", 1, 48)); // NOI18N
         jLabel1.setText("LIBRO AMIGO");
 
-        jButton1.setText("Cadastrar Amigo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        cadastrarAmigo.setText("Cadastrar Amigo");
+        cadastrarAmigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                cadastrarAmigoActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Cadastrar Livro");
+        cadastrarLivro.setText("Cadastrar Livro");
+        cadastrarLivro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cadastrarLivro(evt);
+            }
+        });
 
-        jButton3.setText("Emprestimo");
+
+        cadastrarEmprestimo.setText("Emprestimo");
+        cadastrarEmprestimo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cadastrarEmprestimo(evt);
+            }
+        });
+
 
         jButton4.setText("Sobre");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                sobre(evt);
             }
         });
 
@@ -91,7 +104,7 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         jMenuItemVersao.setText("Versão");
         jMenuItemVersao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemVersaoActionPerformed(evt);
+                cadastrarEmprestimo(evt);
             }
         });
         jMenuOpcoes.add(jMenuItemVersao);
@@ -112,9 +125,9 @@ public class PrincipalJFrame extends javax.swing.JFrame {
                 .addContainerGap(264, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cadastrarAmigo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cadastrarLivro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cadastrarEmprestimo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(251, 251, 251))
@@ -127,11 +140,11 @@ public class PrincipalJFrame extends javax.swing.JFrame {
                 .addGap(83, 83, 83)
                 .addComponent(jLabel1)
                 .addGap(50, 50, 50)
-                .addComponent(jButton1)
+                .addComponent(cadastrarAmigo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(cadastrarLivro)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3)
+                .addComponent(cadastrarEmprestimo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
                 .addContainerGap(156, Short.MAX_VALUE))
@@ -140,33 +153,42 @@ public class PrincipalJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSairActionPerformed
-        int result = JOptionPane.showConfirmDialog(this,"Deseja sair da aplicação?", "Sair",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-                if(result == JOptionPane.YES_OPTION){
-                    System.exit(0);
-                }
-    }//GEN-LAST:event_jMenuItemSairActionPerformed
+    private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {
+        ConfirmDialog confirmDialog = new ConfirmDialog("Deseja sair da aplicação?");
+        confirmDialog.setVisible(true);
 
-    private void jMenuItemVersaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemVersaoActionPerformed
-        // TODO add your handling code here:
+        if (confirmDialog.isConfirmed()) {
+            System.exit(0);
+        }
+    }
+
+
+    private void cadastrarEmprestimo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemVersaoActionPerformed
+        TelaEmprestimo emprestimoView = new TelaEmprestimo();
+        emprestimoView.setVisible(true);
+        this.setVisible(false);
+
     }//GEN-LAST:event_jMenuItemVersaoActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+    private void cadastrarLivro(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        TelaLivroCrud telaLivroView = new TelaLivroCrud();
+        telaLivroView.setVisible(true);
+        this.setVisible(false);
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       // Crie uma instância da segunda tela
-//    CadastroAmigo cadastroAmigoView = new CadastroAmigo();
-//
-//    // Torne a segunda tela visível
-//    cadastroAmigoView.setVisible(true);
-    
-    // Oculte a primeira tela (a que contém o botão)
-    this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void sobre(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        System.out.println("sobre");
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void cadastrarAmigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarAmigoActionPerformed
+
+        TelaAmigosCrud cadastroAmigoView = new TelaAmigosCrud();
+        cadastroAmigoView.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_cadastrarAmigoActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -204,9 +226,9 @@ public class PrincipalJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton cadastrarAmigo;
+    private javax.swing.JButton cadastrarEmprestimo;
+    private javax.swing.JButton cadastrarLivro;
     private javax.swing.JButton jButton4;
     private javax.swing.JInternalFrame jInternalFrameClientes;
     private javax.swing.JLabel jLabel1;

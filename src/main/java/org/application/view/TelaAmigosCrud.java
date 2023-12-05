@@ -8,6 +8,9 @@ package org.application.view;
 
 import org.application.controller.dao.AmigoDao;
 import org.application.model.AmigoBean;
+import org.application.view.dialogAlerts.ConfirmDialog;
+import org.application.view.dialogAlerts.ErrorMessageDialog;
+import org.application.view.dialogAlerts.InfoMessageDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -255,14 +258,15 @@ public class TelaAmigosCrud extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuItemSairActionPerformed
 
-    private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSairActionPerformed
-        int result = JOptionPane.showConfirmDialog(this, "Deseja sair da aplicação?", "Sair",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-        if (result == JOptionPane.YES_OPTION) {
+    private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {
+        ConfirmDialog confirmDialog = new ConfirmDialog("Deseja sair da aplicação?");
+        confirmDialog.setVisible(true);
+
+        if (confirmDialog.isConfirmed()) {
             System.exit(0);
         }
-    }//GEN-LAST:event_jMenuItemSairActionPerformed
+    }
+
 
     private void popularTabela() {
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
@@ -288,9 +292,11 @@ public class TelaAmigosCrud extends javax.swing.JFrame {
         String status = "ATIVO";
 
         if (!isCamposValidos(nome, doc, status)) {
-            JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Existem campos a serem preenchidos");
+            errorMessageDialog.setVisible(true);
             return;
         }
+
 
         int linhaSelecionada = tabelaClientes.getSelectedRow();
 
@@ -311,7 +317,8 @@ public class TelaAmigosCrud extends javax.swing.JFrame {
                 modelo.setValueAt(status, linhaSelecionada, 3);
                 limparCampos();
             } else {
-                JOptionPane.showMessageDialog(null, "Erro ao atualizar o amigo", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+                ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Erro ao atualizar o amigo");
+                errorMessageDialog.setVisible(true);
             }
         } else {
             // Criar um novo amigo, pois nenhum amigo está selecionado na tabela
@@ -323,7 +330,8 @@ public class TelaAmigosCrud extends javax.swing.JFrame {
                 modelo.addRow(new Object[]{idAmigo, amigo.getNome(), amigo.getDocumento(), amigo.getStatus()});
                 limparCampos();
             } else {
-                JOptionPane.showMessageDialog(null, "Amigo já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+                InfoMessageDialog infoMessageDialog = new InfoMessageDialog("Amigo já se encontra cadastrado");
+                infoMessageDialog.setVisible(true);
             }
         }
     }
@@ -347,22 +355,24 @@ public class TelaAmigosCrud extends javax.swing.JFrame {
         int linhaSelecionada = tabelaClientes.getSelectedRow();
 
         if (linhaSelecionada >= 0) {
-            int result = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir este Amigo?", "CUIDADO",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+            ConfirmDialog confirmDialog = new ConfirmDialog("Deseja realmente excluir este Amigo?");
+            confirmDialog.setVisible(true);
 
-            if (result == JOptionPane.YES_OPTION) {
-
+            if (confirmDialog.isConfirmed()) {
                 Integer id = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
                 this.amigoDAO.excluir(id);
                 modelo.removeRow(linhaSelecionada);
 
-                JOptionPane.showMessageDialog(null, "Cliente excluído com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                InfoMessageDialog infoMessageDialog = new InfoMessageDialog("Amigo excluído com sucesso");
+                infoMessageDialog.setVisible(true);
+
                 limparCampos();
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Nenhum Amigo selecionado.", "ERRO", JOptionPane.INFORMATION_MESSAGE);
+            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Nenhum Amigo selecionado.");
+            errorMessageDialog.setVisible(true);
         }
+
 
 
     }//GEN-LAST:event_btnExcluirActionPerformed

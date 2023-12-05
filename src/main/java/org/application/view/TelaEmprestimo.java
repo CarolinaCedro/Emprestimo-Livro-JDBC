@@ -12,9 +12,14 @@ import org.application.controller.dao.LivroDao;
 import org.application.model.AmigoBean;
 import org.application.model.EmprestimoBean;
 import org.application.model.LivroBean;
+import org.application.view.dialogAlerts.ConfirmDialog;
+import org.application.view.dialogAlerts.ErrorMessageDialog;
+import org.application.view.dialogAlerts.InfoMessageDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -66,14 +71,14 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         lblStatus = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        Devolucao = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         txtIdAmigo = new javax.swing.JTextField();
-        jButtonBack = new javax.swing.JButton();
         jComboBox = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaBooks = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        goBack = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuItemSair = new javax.swing.JMenu();
         jMenuItemSair = new javax.swing.JMenuItem();
@@ -128,7 +133,9 @@ public class TelaEmprestimo extends javax.swing.JFrame {
             }
         });
 
-        lblStatus.setText("Livros");
+        lblStatus.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        lblStatus.setForeground(new java.awt.Color(0, 153, 0));
+        lblStatus.setText("Selecione os livros a serem emprestados");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,8 +150,6 @@ public class TelaEmprestimo extends javax.swing.JFrame {
             }
         });
 
-        Devolucao.setText("Devolução");
-
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         jLabel1.setText("Emprestimos");
 
@@ -157,31 +162,19 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
         txtIdAmigo.setText("jTextField2");
 
-        jButtonBack.setText("Voltar");
-        jButtonBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBackActionPerformed(evt);
-            }
-        });
-
         jComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
-        // Crie um modelo de tabela que permite seleção múltipla
-        DefaultTableModel modeloListaLivros = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Garante que as células não são editáveis
+        tabelaBooks.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
+                },
+                new String[]{
+                        "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        };
-
-        tabelaBooks.setModel(modeloListaLivros);
-
-        // Configuração das colunas
-        modeloListaLivros.setColumnIdentifiers(new Object[]{"ID", "TÍTULO", "AUTOR", "EDITORA"});
-
-        // Configuração da seleção múltipla
-        tabelaBooks.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
+        ));
         tabelaBooks.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
@@ -191,11 +184,21 @@ public class TelaEmprestimo extends javax.swing.JFrame {
                 }
             }
         });
-
         jScrollPane2.setViewportView(tabelaBooks);
 
+        jButton2.setText("Limpar Selecão");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-
+        goBack.setText("Voltar menu");
+        goBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goBackActionPerformed(evt);
+            }
+        });
 
         menuItemSair.setText("Opções");
         menuItemSair.addActionListener(new java.awt.event.ActionListener() {
@@ -225,36 +228,36 @@ public class TelaEmprestimo extends javax.swing.JFrame {
                                 .addComponent(jLabel1)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap(42, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(txtIdAmigo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(769, 769, 769))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(jButtonBack)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(Devolucao))
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                                .addComponent(jScrollPane1)
+                                                        .addComponent(goBack)
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                                 .addGroup(layout.createSequentialGroup()
+                                                                        .addGap(6, 6, 6)
+                                                                        .addComponent(btnSalvar)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                        .addComponent(btnExcluir)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                                         .addComponent(jButton3)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
-                                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                                        .addComponent(btnSalvar)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                        .addComponent(btnExcluir))
-                                                                .addComponent(jScrollPane2)
-                                                                .addGroup(layout.createSequentialGroup()
-                                                                        .addComponent(lblStatus)
-                                                                        .addGap(292, 292, 292)
+                                                                .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                        .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                         .addComponent(lblAmigo)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                         .addComponent(jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                                         .addComponent(lblDescricao)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                         .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -270,29 +273,32 @@ public class TelaEmprestimo extends javax.swing.JFrame {
                                         .addComponent(lblDescricao)
                                         .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblStatus)
-                                        .addComponent(lblAmigo)
-                                        .addComponent(jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(lblAmigo)
+                                                        .addComponent(jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(14, 14, 14))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(lblStatus)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButton2)
                                         .addComponent(btnSalvar)
                                         .addComponent(btnExcluir))
-                                .addGap(12, 12, 12)
+                                .addGap(36, 36, 36)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(12, 12, 12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(Devolucao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButtonBack))
-                                .addGap(26, 26, 26)
+                                .addGap(18, 18, 18)
+                                .addComponent(goBack)
+                                .addGap(90, 90, 90)
                                 .addComponent(txtIdAmigo, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -306,14 +312,15 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuItemSairActionPerformed
 
-    private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSairActionPerformed
-        int result = JOptionPane.showConfirmDialog(this, "Deseja sair da aplicação?", "Sair",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-        if (result == JOptionPane.YES_OPTION) {
+    private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {
+        ConfirmDialog confirmDialog = new ConfirmDialog("Deseja sair da aplicação?");
+        confirmDialog.setVisible(true);
+
+        if (confirmDialog.isConfirmed()) {
             System.exit(0);
         }
-    }//GEN-LAST:event_jMenuItemSairActionPerformed
+    }
+
 
     private void popularTabela() {
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
@@ -323,11 +330,23 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         System.out.println("aaaa" + emprestimos);
 
         for (EmprestimoBean emprestimo : emprestimos) {
+            // Formatar a data de empréstimo
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String dataEmprestimoFormatada = dateFormat.format(emprestimo.getDataEmprestimo());
+
+            // Formatar a data de devolução (adicionando 2 meses)
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(emprestimo.getDataDevolucao());
+            calendar.add(Calendar.MONTH, 2);  // Adiciona 2 meses
+            String dataDevolucaoFormatada = dateFormat.format(calendar.getTime());
+
             modelo.addRow(new Object[]{
                     emprestimo.getIdEmprestimo(),
+                    dataEmprestimoFormatada,
                     emprestimo.getDescricao(),
                     emprestimo.getAmigo().getNome(),
-                    emprestimo.getListaLivros().toArray().length
+                    emprestimo.getListaLivros().size(),
+                    dataDevolucaoFormatada
             });
         }
 
@@ -369,9 +388,11 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
 
         if (!isCamposValidos(descricao, status)) {
-            JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Existem campos a serem preenchidos");
+            errorMessageDialog.setVisible(true);
             return;
         }
+
 
         int linhaSelecionada = tabelaClientes.getSelectedRow();
 
@@ -396,9 +417,11 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 //                modelo.setValueAt(livroBean.getAutor_nome(), linhaSelecionada, 3);
 //                modelo.setValueAt(livroBean.getStatus(), linhaSelecionada, 4);
 //                limparCampos();
-//            } else {
-//                JOptionPane.showMessageDialog(null, "Erro ao atualizar o livro", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
-//            }
+//        } else {
+//            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Erro ao atualizar o livro");
+//            errorMessageDialog.setVisible(true);
+//        }
+
 
 
             //...
@@ -434,8 +457,10 @@ public class TelaEmprestimo extends javax.swing.JFrame {
                 modelo.addRow(new Object[]{idEmprestimo, emprestimoInserido.getDescricao(), emprestimoInserido.getAmigo().getNome(), emprestimoInserido.getListaLivros().toArray().length});
                 limparCampos();
             } else {
-                JOptionPane.showMessageDialog(null, "Empréstimo já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+                InfoMessageDialog infoMessageDialog = new InfoMessageDialog("Empréstimo já se encontra cadastrado");
+                infoMessageDialog.setVisible(true);
             }
+
         }
 
 
@@ -447,22 +472,24 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         int linhaSelecionada = tabelaClientes.getSelectedRow();
 
         if (linhaSelecionada >= 0) {
-            int result = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir este Livro?", "CUIDADO",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+            ConfirmDialog confirmDialog = new ConfirmDialog("Deseja realmente dar baixa neste Empréstimo?");
+            confirmDialog.setVisible(true);
 
-            if (result == JOptionPane.YES_OPTION) {
-
+            if (confirmDialog.isConfirmed()) {
                 Integer id = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
-                this.emprestimoDAO.excluir(id);
+                this.emprestimoDAO.darBaixa(id);
                 modelo.removeRow(linhaSelecionada);
 
-                JOptionPane.showMessageDialog(null, "Livro excluído com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                InfoMessageDialog infoMessageDialog = new InfoMessageDialog("Empréstimo baixado com sucesso");
+                infoMessageDialog.setVisible(true);
+
                 limparCampos();
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Nenhum Livro selecionado.", "ERRO", JOptionPane.INFORMATION_MESSAGE);
+            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Nenhum Empréstimo selecionado.");
+            errorMessageDialog.setVisible(true);
         }
+
 
 
     }//GEN-LAST:event_btnExcluirActionPerformed
@@ -512,33 +539,6 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
 
 
-    private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
-
-
-//        btnExcluir.setEnabled(true);
-//        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
-//        modelo.setRowCount(0); // Limpa a tabela
-//
-//
-//        jButtonBack.setEnabled(false);
-//
-//        btnSalvar.setText("Salvar");
-//
-//
-//        List<EmprestimoBean> livros = EmprestimoDao.listarTodasComStatusATIVO();
-//
-//        for (EmprestimoBean livro : livros) {
-//            modelo.addRow(new Object[]{
-//                    livro.getIdLivro(),
-//                    livro.getTitulo(),
-//                    livro.getEditora_nome(),
-//                    livro.getAutor_nome(),
-//                    livro.getStatus()
-//            });
-//        }
-
-    }//GEN-LAST:event_jButtonBackActionPerformed
-
 
     private void tabelaClientesMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_tabelaClientesMouseClicked
         int linhaSelecionada = tabelaClientes.getSelectedRow();
@@ -553,6 +553,23 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tabelaClientesMouseClicked
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        tabelaBooks.clearSelection();
+        tabelaBooks.getSelectionForeground().brighter();
+        this.listLivrosIdsSelecionados = new HashSet<>();
+        this.listaLivrosSelecionados = new HashSet<>();
+        System.out.println("Limpando seleção" + this.listLivrosIdsSelecionados);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void goBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackActionPerformed
+        PrincipalJFrame emprestimoView = new PrincipalJFrame();
+        emprestimoView.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_goBackActionPerformed
+
+    private void DevolucaoActionPerformed(java.awt.event.ActionEvent evt) {
+
+    }
 
     private void tabelaBooksMouseClicked(java.awt.event.MouseEvent evt) throws Exception {
         int[] linhasSelecionadas = tabelaBooks.getSelectedRows();
@@ -653,12 +670,12 @@ public class TelaEmprestimo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Devolucao;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton goBack;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButtonBack;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox;
     private javax.swing.JLabel jLabel1;
@@ -691,9 +708,11 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
     private void initCustomComponents() {
         modelo.addColumn("ID");
+        modelo.addColumn("Dta. EMPRESTIMO");
         modelo.addColumn("DESCRICAO");
         modelo.addColumn("AMIGO");
         modelo.addColumn("QTD LIVROS EMPRESTADOS");
+        modelo.addColumn("DATA EST. DEVOLUCAO");
 
         tabelaClientes.setModel(modelo);
     }

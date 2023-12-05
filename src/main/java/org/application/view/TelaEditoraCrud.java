@@ -8,6 +8,9 @@ package org.application.view;
 
 import org.application.controller.dao.EditoraDao;
 import org.application.model.EditoraBEAN;
+import org.application.view.dialogAlerts.ConfirmDialog;
+import org.application.view.dialogAlerts.ErrorMessageDialog;
+import org.application.view.dialogAlerts.InfoMessageDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -246,14 +249,15 @@ public class TelaEditoraCrud extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuItemSairActionPerformed
 
-    private void jMenuItemSairActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItemSairActionPerformed
-        int result = JOptionPane.showConfirmDialog(this, "Deseja sair da aplicação?", "Sair",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-        if (result == JOptionPane.YES_OPTION) {
+    private void jMenuItemSairActionPerformed(ActionEvent evt) {
+        ConfirmDialog confirmDialog = new ConfirmDialog("Deseja sair da aplicação?");
+        confirmDialog.setVisible(true);
+
+        if (confirmDialog.isConfirmed()) {
             System.exit(0);
         }
-    }//GEN-LAST:event_jMenuItemSairActionPerformed
+    }
+
 
     private void popularTabela() {
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
@@ -276,9 +280,11 @@ public class TelaEditoraCrud extends JFrame {
         String status = "ATIVO";
 
         if (!isCamposValidos(razao, status)) {
-            JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Existem campos a serem preenchidos");
+            errorMessageDialog.setVisible(true);
             return;
         }
+
 
         int linhaSelecionada = tabelaClientes.getSelectedRow();
 
@@ -298,8 +304,10 @@ public class TelaEditoraCrud extends JFrame {
                 modelo.setValueAt(status, linhaSelecionada, 2);
                 limparCampos();
             } else {
-                JOptionPane.showMessageDialog(null, "Erro ao atualizar o amigo", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+                ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Erro ao atualizar o amigo");
+                errorMessageDialog.setVisible(true);
             }
+
         } else {
             // Criar um novo amigo, pois nenhum amigo está selecionado na tabela
             EditoraBEAN editora = new EditoraBEAN(razao, status);
@@ -310,7 +318,8 @@ public class TelaEditoraCrud extends JFrame {
                 modelo.addRow(new Object[]{idAmigo, editora.getRazaoSocial(), editora.getStatus()});
                 limparCampos();
             } else {
-                JOptionPane.showMessageDialog(null, "Editora já se encontra cadastrada", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+                InfoMessageDialog infoMessageDialog = new InfoMessageDialog("Editora já se encontra cadastrada");
+                infoMessageDialog.setVisible(true);
             }
         }
     }
@@ -333,22 +342,24 @@ public class TelaEditoraCrud extends JFrame {
         int linhaSelecionada = tabelaClientes.getSelectedRow();
 
         if (linhaSelecionada >= 0) {
-            int result = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir esta Editora?", "CUIDADO",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+            ConfirmDialog confirmDialog = new ConfirmDialog("Deseja realmente excluir esta Editora?");
+            confirmDialog.setVisible(true);
 
-            if (result == JOptionPane.YES_OPTION) {
-
+            if (confirmDialog.isConfirmed()) {
                 Integer id = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
                 this.editoraDao.excluir(id);
                 modelo.removeRow(linhaSelecionada);
 
-                JOptionPane.showMessageDialog(null, "Editora excluída com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                InfoMessageDialog infoMessageDialog = new InfoMessageDialog("Editora excluída com sucesso");
+                infoMessageDialog.setVisible(true);
+
                 limparCampos();
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Nenhum Editora selecionada.", "ERRO", JOptionPane.INFORMATION_MESSAGE);
+            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Nenhuma Editora selecionada.");
+            errorMessageDialog.setVisible(true);
         }
+
 
 
     }//GEN-LAST:event_btnExcluirActionPerformed

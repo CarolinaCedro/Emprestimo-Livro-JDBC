@@ -8,6 +8,9 @@ package org.application.view;
 
 import org.application.controller.dao.LivroDao;
 import org.application.model.LivroBean;
+import org.application.view.dialogAlerts.ConfirmDialog;
+import org.application.view.dialogAlerts.ErrorMessageDialog;
+import org.application.view.dialogAlerts.InfoMessageDialog;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -270,14 +273,15 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_menuItemSairActionPerformed
 
-    private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSairActionPerformed
-        int result = JOptionPane.showConfirmDialog(this, "Deseja sair da aplicação?", "Sair",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-        if (result == JOptionPane.YES_OPTION) {
+    private void jMenuItemSairActionPerformed(java.awt.event.ActionEvent evt) {
+        ConfirmDialog confirmDialog = new ConfirmDialog("Deseja realmente sair da aplicação?");
+        confirmDialog.setVisible(true);
+
+        if (confirmDialog.isConfirmed()) {
             System.exit(0);
         }
-    }//GEN-LAST:event_jMenuItemSairActionPerformed
+    }
+
 
     private void popularTabela() {
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
@@ -310,9 +314,9 @@ public class TelaLivroCrud extends javax.swing.JFrame {
 
 //        String status = txtStatus.setText("Ativo");
         String status = "ATIVO";
-
         if (!isCamposValidos(tituto, editoraId, autorId, status)) {
-            JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Existem campos a serem preenchidos");
+            errorMessageDialog.setVisible(true);
             return;
         }
 
@@ -339,8 +343,10 @@ public class TelaLivroCrud extends javax.swing.JFrame {
                 modelo.setValueAt(livroBean.getStatus(), linhaSelecionada, 4);
                 limparCampos();
             } else {
-                JOptionPane.showMessageDialog(null, "Erro ao atualizar o livro", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+                ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Erro ao atualizar o livro");
+                errorMessageDialog.setVisible(true);
             }
+
         } else {
             // Criar um novo amigo, pois nenhum amigo está selecionado na tabela
             LivroBean amigo = new LivroBean(tituto, status, editora, autor);
@@ -352,7 +358,8 @@ public class TelaLivroCrud extends javax.swing.JFrame {
                 modelo.addRow(new Object[]{idLivro, livroBean.getTitulo(), livroBean.getEditora_nome(), livroBean.getAutor_nome(), livroBean.getStatus()});
                 limparCampos();
             } else {
-                JOptionPane.showMessageDialog(null, "Livro já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+                InfoMessageDialog infoMessageDialog = new InfoMessageDialog("Livro já se encontra cadastrado");
+                infoMessageDialog.setVisible(true);
             }
         }
     }
@@ -379,21 +386,22 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         int linhaSelecionada = tabelaClientes.getSelectedRow();
 
         if (linhaSelecionada >= 0) {
-            int result = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir este Livro?", "CUIDADO",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+            ConfirmDialog confirmDialog = new ConfirmDialog("Deseja realmente excluir este Livro?");
+            confirmDialog.setVisible(true);
 
-            if (result == JOptionPane.YES_OPTION) {
-
+            if (confirmDialog.isConfirmed()) {
                 Integer id = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
                 this.livroDAO.excluir(id);
                 modelo.removeRow(linhaSelecionada);
 
-                JOptionPane.showMessageDialog(null, "Livro excluído com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                InfoMessageDialog infoMessageDialog = new InfoMessageDialog("Livro excluído com sucesso");
+                infoMessageDialog.setVisible(true);
+
                 limparCampos();
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Nenhum Livro selecionado.", "ERRO", JOptionPane.INFORMATION_MESSAGE);
+            ErrorMessageDialog errorMessageDialog = new ErrorMessageDialog("Nenhum Livro selecionado.");
+            errorMessageDialog.setVisible(true);
         }
 
 

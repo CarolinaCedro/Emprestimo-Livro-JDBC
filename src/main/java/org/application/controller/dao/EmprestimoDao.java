@@ -86,7 +86,7 @@ public class EmprestimoDao {
     public static List<EmprestimoBean> listarTodosEmprestimosDetalhados() {
         List<EmprestimoBean> emprestimos = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
-        String query = "SELECT * FROM Emprestimos";
+        String query = "SELECT * FROM Emprestimos WHERE status = 'ATIVO'";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {
@@ -289,7 +289,22 @@ public class EmprestimoDao {
         return -1; // Retornar -1 em caso de falha na recuperação do último ID
     }
 
-    public void excluir(Integer id) {
-        System.out.println("delete");
+    public void darBaixa(Integer id) {
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "UPDATE Emprestimos SET status = 'INATIVO' WHERE idEmprestimo = ?";
+
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.setInt(1, id);
+            int affectedRows = psmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                System.out.println("Baixa realizada com sucesso para o empréstimo com ID: " + id);
+            } else {
+                System.out.println("Nenhum empréstimo encontrado com o ID: " + id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 }
