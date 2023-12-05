@@ -70,6 +70,13 @@ public class EmprestimoDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("*******************************");
+        System.out.println("*******************************");
+        System.out.println("*******************************");
+        System.out.println("aquiiiiiiiiiii esse clarianaaaa" + emprestimo);
+        System.out.println("*******************************");
+        System.out.println("*******************************");
+        System.out.println("*******************************");
         return emprestimo;
     }
 
@@ -149,8 +156,8 @@ public class EmprestimoDao {
     public static AmigoBean buscarAmigoPorEmprestimo(Connection con, int idEmprestimo) throws SQLException {
         AmigoBean amigo = null;
         String query = "SELECT Amigos.* FROM Amigos " +
-                "INNER JOIN Amigos_Emprestimos ON Amigos.idAmigo = Amigos_Emprestimos.idAmigo " +
-                "WHERE Amigos_Emprestimos.idEmprestimo = ?";
+                "INNER JOIN Emprestimos ON Amigos.idAmigo = Emprestimos.idAmigo " +
+                "WHERE Emprestimos.idEmprestimo = ?";
         try (PreparedStatement psmt = con.prepareStatement(query)) {
             psmt.setInt(1, idEmprestimo);
             ResultSet rs = psmt.executeQuery();
@@ -163,11 +170,32 @@ public class EmprestimoDao {
             }
         }
         return amigo;
-
     }
 
 
-    public static void inserirEmprestimo(EmprestimoBean emprestimo) {
+
+//    public static AmigoBean buscarAmigoPorEmprestimo(Connection con, int idEmprestimo) throws SQLException {
+//        AmigoBean amigo = null;
+//        String query = "SELECT Amigos.* FROM Amigos " +
+//                "INNER JOIN Amigos_Emprestimos ON Amigos.idAmigo = Amigos_Emprestimos.idAmigo " +
+//                "WHERE Amigos_Emprestimos.idEmprestimo = ?";
+//        try (PreparedStatement psmt = con.prepareStatement(query)) {
+//            psmt.setInt(1, idEmprestimo);
+//            ResultSet rs = psmt.executeQuery();
+//            if (rs.next()) {
+//                amigo = new AmigoBean();
+//                amigo.setIdAmigo(rs.getInt("idAmigo"));
+//                amigo.setNome(rs.getString("nome"));
+//                amigo.setDocumento(rs.getString("documento"));
+//                amigo.setStatus(rs.getString("status"));
+//            }
+//        }
+//        return amigo;
+//
+//    }
+
+
+    public static boolean inserirEmprestimo(EmprestimoBean emprestimo) {
         Connection con = ConnectionMySQLDAO.getConnection();
 
         String queryEmprestimo = "INSERT INTO Emprestimos (dataEmprestimo, dataDevolucao, descricao, idAmigo, status) VALUES (?, ?, ?, ?, ?)";
@@ -219,6 +247,7 @@ public class EmprestimoDao {
                 e.printStackTrace();
             }
         }
+        return false;
     }
 
 
@@ -240,6 +269,23 @@ public class EmprestimoDao {
         return list;
     }
 
+    public static int getLastInsertedId() {
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT LAST_INSERT_ID() as last_id";
+
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            try (ResultSet rs = psmt.executeQuery()) {
+                if (rs.next()) {
+                    int lastId = rs.getInt("last_id");
+                    return lastId;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1; // Retornar -1 em caso de falha na recuperação do último ID
+    }
 
     public void excluir(Integer id) {
         System.out.println("delete");

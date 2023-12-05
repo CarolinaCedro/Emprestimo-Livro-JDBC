@@ -63,6 +63,9 @@ public class Main {
         emprestimo.setListaLivros(livros);
         emprestimo.setAmigo(amigoBean);
 
+//        EmprestimoBean emprestimo2 = new EmprestimoBean(dataEmprestimo, dataDevolucao, descricao, this.listaLivrosSelecionados, amigoSelecionado, status);
+
+
         // Inserir o empréstimo no banco de dados
         EmprestimoDao.inserirEmprestimo(emprestimo);
 

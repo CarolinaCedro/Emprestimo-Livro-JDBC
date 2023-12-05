@@ -9,22 +9,25 @@ package org.application.view;
 import org.application.controller.dao.AmigoDao;
 import org.application.controller.dao.EmprestimoDao;
 import org.application.controller.dao.LivroDao;
+import org.application.model.AmigoBean;
 import org.application.model.EmprestimoBean;
 import org.application.model.LivroBean;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TelaEmprestimo extends javax.swing.JFrame {
 
     private JProgressBar progressBar;
 
-    private DefaultListModel<String> modeloListaLivros;
-    private JList<String> listaLivros;
+    private DefaultTableModel modeloListaLivros = new DefaultTableModel();
+    private Set<Integer> listLivrosIdsSelecionados = new HashSet<>();
+    private ArrayList<LivroBean> listaLivrosSelecionados = new ArrayList<>();
 
     private DefaultTableModel modelo = new DefaultTableModel();
     private EmprestimoDao emprestimoDAO = new EmprestimoDao();
@@ -34,8 +37,9 @@ public class TelaEmprestimo extends javax.swing.JFrame {
      */
     public TelaEmprestimo() {
         initComponents();
+        initLabelTableLivros();
         initCustomComponents();
-        popularListaLivros(LivroDao.listarTodasComStatusATIVO());
+        popularTabelaLivros();
         popularTabela();
     }
 
@@ -69,6 +73,8 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         txtIdAmigo = new javax.swing.JTextField();
         jButtonBack = new javax.swing.JButton();
         jComboBox = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabelaBooks = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuItemSair = new javax.swing.JMenu();
         jMenuItemSair = new javax.swing.JMenuItem();
@@ -139,11 +145,6 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         });
 
         Devolucao.setText("Devolução");
-        Devolucao.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DevolucaoActionPerformed(evt);
-            }
-        });
 
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 36)); // NOI18N
         jLabel1.setText("Emprestimos");
@@ -166,6 +167,37 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
         jComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
+        // Crie um modelo de tabela que permite seleção múltipla
+        DefaultTableModel modeloListaLivros = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Garante que as células não são editáveis
+            }
+        };
+
+        tabelaBooks.setModel(modeloListaLivros);
+
+        // Configuração das colunas
+        modeloListaLivros.setColumnIdentifiers(new Object[]{"ID", "TÍTULO", "AUTOR", "EDITORA"});
+
+        // Configuração da seleção múltipla
+        tabelaBooks.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        tabelaBooks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                try {
+                    tabelaBooksMouseClicked(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        jScrollPane2.setViewportView(tabelaBooks);
+
+
+
+
         menuItemSair.setText("Opções");
         menuItemSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -185,48 +217,49 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(70, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(btnSalvar)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(btnExcluir))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(txtIdAmigo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(379, 379, 379))
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(jButton3)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
-                                                .addComponent(jTextField1)
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(jButtonBack)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(Devolucao)))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(lblDescricao)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                        .addComponent(lblStatus)
-                                                        .addGap(292, 292, 292)
-                                                        .addComponent(lblAmigo)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                .addGap(125, 125, 125))
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(288, 288, 288)
                                 .addComponent(jLabel1)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(txtIdAmigo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(769, 769, 769))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(jButtonBack)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(Devolucao))
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                                .addComponent(jScrollPane1)
+                                                                .addGroup(layout.createSequentialGroup()
+                                                                        .addComponent(jButton3)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                                        .addComponent(btnSalvar)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                        .addComponent(btnExcluir))
+                                                                .addComponent(jScrollPane2)
+                                                                .addGroup(layout.createSequentialGroup()
+                                                                        .addComponent(lblStatus)
+                                                                        .addGap(292, 292, 292)
+                                                                        .addComponent(lblAmigo)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addGroup(layout.createSequentialGroup()
+                                                                        .addComponent(lblDescricao)
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addGap(64, 64, 64))))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,72 +275,32 @@ public class TelaEmprestimo extends javax.swing.JFrame {
                                         .addComponent(lblStatus)
                                         .addComponent(lblAmigo)
                                         .addComponent(jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(14, 14, 14)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnSalvar)
                                         .addComponent(btnExcluir))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(12, 12, 12)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(12, 12, 12)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(Devolucao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jButtonBack))
-                                .addGap(40, 40, 40)
+                                .addGap(26, 26, 26)
                                 .addComponent(txtIdAmigo, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
-
-
-        modeloListaLivros = new DefaultListModel<>();
-        listaLivros = new JList<>(modeloListaLivros);
-        listaLivros.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        JScrollPane scrollPane = new JScrollPane(listaLivros);
-        add(scrollPane, BorderLayout.CENTER);
-
-        // Adicione um botão para mostrar os livros selecionados
-        JButton btnMostrarSelecionados = new JButton("Mostrar Selecionados");
-        btnMostrarSelecionados.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Obter os livros selecionados
-                List<String> livrosSelecionados = listaLivros.getSelectedValuesList();
-
-                // Exibir os livros selecionados em uma caixa de diálogo
-                String mensagem = "Livros selecionados:\n" + String.join("\n", livrosSelecionados);
-                JOptionPane.showMessageDialog(TelaEmprestimo.this, mensagem);
-            }
-        });
-
-        modeloListaLivros = new DefaultListModel<>();
-        listaLivros = new JList<>(modeloListaLivros);
-
-        JPanel painelBotoes = new JPanel();
-        painelBotoes.add(btnMostrarSelecionados);
-        add(painelBotoes, BorderLayout.SOUTH);
-
-        // Popular a lista de livros (substitua isso com seus próprios dados)
-//        popularListaLivros();
-
-
     }// </editor-fold>//GEN-END:initComponents
 
-    private void popularListaLivros(List<LivroBean>livros) {
-        // Limpar a lista antes de adicionar os novos livros
-        modeloListaLivros.clear();
-
-        // Adicionar livros da lista ao modelo
-        for (LivroBean livro : livros) {
-            modeloListaLivros.addElement(livro.getTitulo());  // Substitua "getTitulo()" pelo método correto para obter o título do livro
-        }
-    }
 
 
     private void menuItemSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSairActionPerformed
@@ -345,37 +338,46 @@ public class TelaEmprestimo extends javax.swing.JFrame {
     }
 
 
+    private void popularTabelaLivros() {
+        DefaultTableModel modelo = (DefaultTableModel) tabelaBooks.getModel();
+        modelo.setRowCount(0); // Limpa a tabela
+
+        List<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
+        System.out.println("aaaa" + livros);
+
+        for (LivroBean livro : livros) {
+            modelo.addRow(new Object[]{
+                    livro.getIdLivro(),
+                    livro.getTitulo(),
+                    livro.getAutor_nome(),
+                    livro.getEditora_nome()
+            });
+        }
+
+        List<String> nomesAmigos = AmigoDao.listarNomesAmigos();
+        DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>(nomesAmigos.toArray(new String[0]));
+        jComboBox.setModel(comboModel);
+    }
+
+
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {
 
-        //data Emprestimo
-        //data Devolução
-        //descricao
-        //listaLivros
-        //amigo
 
-//        String descricao = txtDescricao.getText();
-//        String amigoID = txtAmigo.getText();
-//        String listaLivros = txtLivros.getText();
-//        String status = "ATIVO";
-//        Date dataEmprestimo = new Date();
-//        Date dataDevolucao = new Date();
-//
-//        Integer amigo = Integer.parseInt(amigoID);
-//
-//        List<LivroBean> livros = Integer.parseInt(editoraId);
-//
-//
-////        String status = txtStatus.setText("Ativo");
-//        String status = "ATIVO";
-//
-//        if (!isCamposValidos(tituto, editoraId, autorId, status)) {
-//            JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
-//            return;
-//        }
-//
-//        int linhaSelecionada = tabelaClientes.getSelectedRow();
-//
-//        if (linhaSelecionada >= 0) {
+        String descricao = txtDescricao.getText();
+        String status = "ATIVO";
+        Date dataEmprestimo = new Date();
+        Date dataDevolucao = new Date();
+
+
+        if (!isCamposValidos(descricao, status)) {
+            JOptionPane.showMessageDialog(null, "Existem campos a serem preenchidos", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        int linhaSelecionada = tabelaClientes.getSelectedRow();
+
+
+        if (linhaSelecionada >= 0) {
 //            Integer idLivroSelecionado = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
 //
 //            System.out.println("o carinha selecionado " + idLivroSelecionado);
@@ -398,43 +400,47 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 //            } else {
 //                JOptionPane.showMessageDialog(null, "Erro ao atualizar o livro", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
 //            }
-//        } else {
-//            // Criar um novo amigo, pois nenhum amigo está selecionado na tabela
-//            EmprestimoBean amigo = new EmprestimoBean(tituto, status, editora, autor);
-//            boolean isCadastrado = EmprestimoDao.inserir(amigo);
-//
-//            if (!isCadastrado) {
-//                int idLivro = EmprestimoDao.getLastInsertedId();
-//                EmprestimoBean livroBean = EmprestimoDao.buscarLivroPorId(idLivro);
-//                modelo.addRow(new Object[]{idLivro, livroBean.getTitulo(), livroBean.getEditora_nome(), livroBean.getAutor_nome(), livroBean.getStatus()});
-//                limparCampos();
-//            } else {
-//                JOptionPane.showMessageDialog(null, "Livro já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        }
 
-        //Amigo selecionado logico
-        String amigoSelecionado = (String) jComboBox.getSelectedItem();
-        if (amigoSelecionado != null) {
-            // Faça algo com o amigo selecionado
-            System.out.println("Amigo selecionado: " + amigoSelecionado);
+
+            //...
+
+        } else {
+
+            String amigoSelecionadoString = (String) jComboBox.getSelectedItem();
+
+            AmigoBean amigoFilterSelected = AmigoDao.getByName(amigoSelecionadoString);
+            System.out.println("amigo que eu filtro antes de mandar" + amigoFilterSelected);
+
+
+            // Criar um novo empréstimo, pois nenhum empréstimo está selecionado na tabela
+            EmprestimoBean emprestimo = new EmprestimoBean(null, dataEmprestimo, dataDevolucao, descricao, listaLivrosSelecionados, amigoFilterSelected, status);
+
+            // Adicionando mais mensagens de depuração
+            System.out.println("Objeto Empréstimo: " + emprestimo);
+
+            boolean isCadastrado = EmprestimoDao.inserirEmprestimo(emprestimo);
+
+            if (!isCadastrado) {
+                System.out.println("Objeto Empréstimo: " + emprestimo);
+
+                int idEmprestimo = EmprestimoDao.getLastInsertedId();
+                EmprestimoBean emprestimoInserido = EmprestimoDao.buscarEmprestimoPorId(idEmprestimo);
+
+                // Adicionando mensagens de depuração
+                System.out.println("ID do Empréstimo Inserido: " + idEmprestimo);
+                System.out.println("Empréstimo Inserido: " + emprestimoInserido);
+
+                modelo.addRow(new Object[]{idEmprestimo, emprestimoInserido.getDescricao(), emprestimoInserido.getAmigo().getNome(), emprestimoInserido.getListaLivros().toArray().length});
+                limparCampos();
+            } else {
+                JOptionPane.showMessageDialog(null, "Empréstimo já se encontra cadastrado", "ATENÇÃO", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
+
 
     }
 
 
-    private void tabelaClientesMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_tabelaClientesMouseClicked
-        int linhaSelecionada = tabelaClientes.getSelectedRow();
-        Integer idAmigo = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
-        System.out.println("o id" + idAmigo);
-        try {
-            EmprestimoBean livro = EmprestimoDao.buscarEmprestimoPorId(idAmigo);
-            System.out.println("traz o livor" + livro);
-        } catch (Exception err) {
-            throw new Exception(err);
-        }
-
-    }//GEN-LAST:event_tabelaClientesMouseClicked
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int linhaSelecionada = tabelaClientes.getSelectedRow();
@@ -459,6 +465,7 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnExcluirActionPerformed
+
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -502,75 +509,7 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         worker.execute(); // Inicie a execução do SwingWorker
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void DevolucaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DevolucaoActionPerformed
-//        btnExcluir.setEnabled(false);
-//        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
-//        modelo.setRowCount(0); // Limpa a tabela
-//
-//        List<EmprestimoBean> livros = EmprestimoDao.listarTodosInativosComNomes();
-//        System.out.println("como esses livros tão chegando" + livros);
-//        System.out.println(livros);
-//
-//        jButtonBack.setEnabled(true);
-//
-//
-//        btnSalvar.setText("Restaurar");
-//
-//        jButton3.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent actionEvent) {
-//                btnExcluir.setEnabled(true);
-//                DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
-//                modelo.setRowCount(0); // Limpa a tabela
-//
-//                List<EmprestimoBean> livros = EmprestimoDao.listarTodosInativosComNomes();
-//
-//                for (EmprestimoBean livro : livros) {
-//                    modelo.addRow(new Object[]{
-//                            livro.getIdLivro(),
-//                            livro.getTitulo(),
-//                            livro.getEditora_nome(),
-//                            livro.getAutor_nome(),
-//                            livro.getStatus()
-//                    });
-//                }
-//            }
-//        });
-//
-//
-//        btnSalvar.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent evt) {
-//                int selectedRow = tabelaClientes.getSelectedRow();
-//                if (selectedRow >= 0) {
-//                    int idLivro = (int) modelo.getValueAt(selectedRow, 0);
-//
-//
-//                    for (EmprestimoBean livro : livros) {
-//                        if (livro.getIdLivro() == idLivro) {
-//                            livro.setStatus("ATIVO");
-//                            break;
-//                        }
-//                    }
-//
-//                    modelo.setValueAt("ATIVO", selectedRow, 4);
-//                    System.out.println("aquii mudou");
-//
-//                }
-//            }
-//        });
-//
-//        for (EmprestimoBean livro : livros) {
-//            modelo.addRow(new Object[]{
-//                    livro.getIdLivro(),
-//                    livro.getTitulo(),
-//                    livro.getEditora_nome(),
-//                    livro.getAutor_nome(),
-//                    livro.getStatus()
-//            });
-//        }
 
-    }//GEN-LAST:event_DevolucaoActionPerformed
 
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
 
@@ -599,23 +538,70 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButtonBackActionPerformed
 
+
+    private void tabelaClientesMouseClicked(java.awt.event.MouseEvent evt) throws Exception {//GEN-FIRST:event_tabelaClientesMouseClicked
+        int linhaSelecionada = tabelaClientes.getSelectedRow();
+        Integer idAmigo = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
+        System.out.println("o id" + idAmigo);
+        try {
+            EmprestimoBean livro = EmprestimoDao.buscarEmprestimoPorId(idAmigo);
+            System.out.println("traz o livor" + livro);
+        } catch (Exception err) {
+            throw new Exception(err);
+        }
+
+    }//GEN-LAST:event_tabelaClientesMouseClicked
+
+
+    private void tabelaBooksMouseClicked(java.awt.event.MouseEvent evt) throws Exception {
+        int[] linhasSelecionadas = tabelaBooks.getSelectedRows();
+
+        if (linhasSelecionadas.length > 0) {
+            for (int linhaSelecionada : linhasSelecionadas) {
+                Integer IDlivro = (Integer) tabelaBooks.getValueAt(linhaSelecionada, 0);
+                System.out.println("o id" + IDlivro);
+
+                // Adiciona o ID do livro ao ArrayList
+                listLivrosIdsSelecionados.add(IDlivro);
+
+                try {
+                    LivroBean livro = LivroDao.buscarLivroPorId(IDlivro);
+                    listaLivrosSelecionados.add(livro);
+
+                    System.out.println("traz o livro" + livro);
+                } catch (RuntimeException err) {
+                    System.out.println(err);
+                }
+            }
+        } else {
+            System.out.println("Nenhuma linha selecionada.");
+        }
+    }
+
+    public void imprimirLivrosSelecionados() {
+        for (Integer idLivro : listLivrosIdsSelecionados) {
+            System.out.println("Livro selecionado: " + idLivro);
+        }
+    }
+
+
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
 
 
-//        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
-//        modelo.setRowCount(0); // Limpa a tabela
-//
-//        List<EmprestimoBean> livros = EmprestimoDao.listarTodosOrdenadosPorNomeAsc();
-//
-//        for (EmprestimoBean livro : livros) {
-//            modelo.addRow(new Object[]{
-//                    livro.getIdLivro(),
-//                    livro.getTitulo(),
-//                    livro.getEditora_nome(),
-//                    livro.getAutor_nome(),
-//                    livro.getStatus()
-//            });
-//        }
+        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
+        modelo.setRowCount(0); // Limpa a tabela
+
+        List<EmprestimoBean> emprestimoBeans = EmprestimoDao.listarTodosEmprestimosDetalhados();
+
+        for (EmprestimoBean emprestimo : emprestimoBeans) {
+            modelo.addRow(new Object[]{
+                    emprestimo.getIdEmprestimo(),
+                    emprestimo.getDescricao(),
+                    emprestimo.getDataEmprestimo(),
+                    emprestimo.getDataDevolucao(),
+                    emprestimo.getStatus()
+            });
+        }
 
 
     }
@@ -675,11 +661,13 @@ public class TelaEmprestimo extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItemSair;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblAmigo;
     private javax.swing.JLabel lblDescricao;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JMenu menuItemSair;
+    private javax.swing.JTable tabelaBooks;
     private javax.swing.JTable tabelaClientes;
     private javax.swing.JTextField txtDescricao;
     private javax.swing.JTextField txtIdAmigo;
@@ -703,7 +691,17 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         tabelaClientes.setModel(modelo);
     }
 
+    private void initLabelTableLivros() {
+        modeloListaLivros.addColumn("ID");
+        modeloListaLivros.addColumn("TITULO");
+        modeloListaLivros.addColumn("AUTOR");
+        modeloListaLivros.addColumn("EDITORA");
+
+        tabelaClientes.setModel(modeloListaLivros);
+    }
+
     private void limparCampos() {
         txtIdAmigo.setText("");
+        txtDescricao.setText("");
     }
 }

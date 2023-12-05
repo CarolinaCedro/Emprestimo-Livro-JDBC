@@ -228,4 +228,24 @@ public class AmigoDao {
         return nomesAmigos;
     }
 
+    public static AmigoBean getByName(String nome) {
+        AmigoBean amigo = null;
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "SELECT * FROM Amigos WHERE nome = ? AND status = 'ATIVO'";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.setString(1, nome);
+            ResultSet rs = psmt.executeQuery();
+            if (rs.next()) {
+                amigo = new AmigoBean();
+                amigo.setIdAmigo(rs.getInt("idAmigo"));
+                amigo.setNome(rs.getString("nome"));
+                amigo.setDocumento(rs.getString("documento"));
+                amigo.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return amigo;
+    }
+
 }
