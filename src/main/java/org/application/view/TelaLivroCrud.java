@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Set;
 
 public class TelaLivroCrud extends javax.swing.JFrame {
 
@@ -282,7 +283,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
         modelo.setRowCount(0); // Limpa a tabela
 
-        List<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
+        Set<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
         System.out.println("aaaa" + livros);
 
         for (LivroBean livro : livros) {
@@ -541,7 +542,7 @@ public class TelaLivroCrud extends javax.swing.JFrame {
         btnSalvar.setText("Salvar");
 
 
-        List<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
+        Set<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
 
         for (LivroBean livro : livros) {
             modelo.addRow(new Object[]{

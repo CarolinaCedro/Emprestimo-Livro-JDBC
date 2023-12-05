@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LivroDao {
 
@@ -202,8 +204,8 @@ public class LivroDao {
     }
 
 
-    public static List<LivroBean> listarTodasComStatusATIVO() {
-        List<LivroBean> livros = new ArrayList<>();
+    public static Set<LivroBean> listarTodasComStatusATIVO() {
+        Set<LivroBean> livros = new HashSet<>();
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "SELECT l.*, e.razaoSocial AS nome_editora, a.nome AS nome_autor FROM Livros l " +
                 "LEFT JOIN Editoras e ON l.editora_id = e.idEditora " +

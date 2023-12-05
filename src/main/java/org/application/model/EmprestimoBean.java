@@ -3,6 +3,7 @@ package org.application.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class EmprestimoBean {
 
@@ -10,14 +11,14 @@ public class EmprestimoBean {
     private Date dataEmprestimo;
     private Date dataDevolucao;
     private String descricao;
-    private List<LivroBean> listaLivros;
+    private Set<LivroBean> listaLivros;
     private AmigoBean amigo;
     private String status;
 
     public EmprestimoBean() {
     }
 
-    public EmprestimoBean(Integer idEmprestimo, Date dataEmprestimo, Date dataDevolucao, String descricao, List<LivroBean> listaLivros, AmigoBean amigo, String status) {
+    public EmprestimoBean(Integer idEmprestimo, Date dataEmprestimo, Date dataDevolucao, String descricao, Set<LivroBean> listaLivros, AmigoBean amigo, String status) {
         this.idEmprestimo = idEmprestimo;
         this.dataEmprestimo = dataEmprestimo;
         this.dataDevolucao = dataDevolucao;
@@ -26,7 +27,6 @@ public class EmprestimoBean {
         this.amigo = amigo;
         this.status = status;
     }
-
 
     public Integer getIdEmprestimo() {
         return idEmprestimo;
@@ -60,11 +60,11 @@ public class EmprestimoBean {
         this.descricao = descricao;
     }
 
-    public List<LivroBean> getListaLivros() {
+    public Set<LivroBean> getListaLivros() {
         return listaLivros;
     }
 
-    public void setListaLivros(List<LivroBean> listaLivros) {
+    public void setListaLivros(Set<LivroBean> listaLivros) {
         this.listaLivros = listaLivros;
     }
 

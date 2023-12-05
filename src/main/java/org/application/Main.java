@@ -10,6 +10,7 @@ import org.application.model.LivroBean;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class Main {
 
@@ -46,7 +47,7 @@ public class Main {
 
 
         // Supondo que esses métodos existam e funcionem corretamente
-        List<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
+        Set<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
         System.out.println("aqui a pesquisa de todos os livros" + livros);
         amigoBean = AmigoDao.buscarAmigoPorId(1);
 

@@ -15,7 +15,6 @@ import org.application.model.LivroBean;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +26,7 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
     private DefaultTableModel modeloListaLivros = new DefaultTableModel();
     private Set<Integer> listLivrosIdsSelecionados = new HashSet<>();
-    private ArrayList<LivroBean> listaLivrosSelecionados = new ArrayList<>();
+    private Set<LivroBean> listaLivrosSelecionados = new HashSet<>();
 
     private DefaultTableModel modelo = new DefaultTableModel();
     private EmprestimoDao emprestimoDAO = new EmprestimoDao();
@@ -342,7 +341,7 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabelaBooks.getModel();
         modelo.setRowCount(0); // Limpa a tabela
 
-        List<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
+        Set<LivroBean> livros = LivroDao.listarTodasComStatusATIVO();
         System.out.println("aaaa" + livros);
 
         for (LivroBean livro : livros) {
@@ -410,6 +409,8 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
             AmigoBean amigoFilterSelected = AmigoDao.getByName(amigoSelecionadoString);
             System.out.println("amigo que eu filtro antes de mandar" + amigoFilterSelected);
+
+            System.out.println("listas" + listaLivrosSelecionados);
 
 
             // Criar um novo empréstimo, pois nenhum empréstimo está selecionado na tabela
@@ -555,6 +556,7 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
     private void tabelaBooksMouseClicked(java.awt.event.MouseEvent evt) throws Exception {
         int[] linhasSelecionadas = tabelaBooks.getSelectedRows();
+        System.out.println("linhas selecionadas" + linhasSelecionadas.length);
 
         if (linhasSelecionadas.length > 0) {
             for (int linhaSelecionada : linhasSelecionadas) {
@@ -563,24 +565,29 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
                 // Adiciona o ID do livro ao ArrayList
                 listLivrosIdsSelecionados.add(IDlivro);
+                System.out.println("os ids que estamos adicionando" + IDlivro);
+            }
 
+            listLivrosIdsSelecionados.forEach(System.out::println);
+
+            System.out.println("mdssss tá setando todos os ids" + this.listLivrosIdsSelecionados);
+            // Agora, para cada ID de livro, busca o livro e adiciona à lista
+            for (Integer idLivro : listLivrosIdsSelecionados) {
                 try {
-                    LivroBean livro = LivroDao.buscarLivroPorId(IDlivro);
-                    listaLivrosSelecionados.add(livro);
+                    LivroBean livro = LivroDao.buscarLivroPorId(idLivro);
+                    this.listaLivrosSelecionados.add(livro);
 
                     System.out.println("traz o livro" + livro);
                 } catch (RuntimeException err) {
                     System.out.println(err);
                 }
             }
+
+            listaLivrosSelecionados.forEach(System.out::println);
+
+            System.out.println("livros selecionados" + this.listaLivrosSelecionados);
         } else {
             System.out.println("Nenhuma linha selecionada.");
-        }
-    }
-
-    public void imprimirLivrosSelecionados() {
-        for (Integer idLivro : listLivrosIdsSelecionados) {
-            System.out.println("Livro selecionado: " + idLivro);
         }
     }
 

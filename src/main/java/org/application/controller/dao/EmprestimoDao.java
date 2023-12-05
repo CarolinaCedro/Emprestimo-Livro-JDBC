@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class EmprestimoDao {
@@ -96,7 +98,7 @@ public class EmprestimoDao {
                 emprestimo.setStatus(rs.getString("status"));
 
                 // Buscar livros associados ao empréstimo
-                List<LivroBean> livros = buscarLivrosPorEmprestimo(con, emprestimo.getIdEmprestimo());
+                Set<LivroBean> livros = buscarLivrosPorEmprestimo(con, emprestimo.getIdEmprestimo());
                 System.out.println("Aqui a lista de todos os ids que traz no metodo no dao" + livros);
                 emprestimo.setListaLivros(livros);
 
@@ -132,8 +134,8 @@ public class EmprestimoDao {
     }
 
 
-    public static List<LivroBean> buscarLivrosPorEmprestimo(Connection con, int idEmprestimo) throws SQLException {
-        List<LivroBean> livros = new ArrayList<>();
+    public static Set<LivroBean> buscarLivrosPorEmprestimo(Connection con, int idEmprestimo) throws SQLException {
+        Set<LivroBean> livros = new HashSet<>();
         String query = "SELECT Livros.* FROM Livros " +
                 "INNER JOIN Emprestimo_has_livros ON Livros.idLivro = Emprestimo_has_livros.idLivro " +
                 "WHERE Emprestimo_has_livros.idEmprestimo = ?";
