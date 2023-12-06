@@ -289,6 +289,33 @@ public class EmprestimoDao {
         return -1; // Retornar -1 em caso de falha na recuperação do último ID
     }
 
+    public static boolean atualizar(EmprestimoBean emprestimo) {
+        System.out.println("aqui como está chegando pra atualizar" + emprestimo);
+        Connection con = ConnectionMySQLDAO.getConnection();
+        String query = "UPDATE Emprestimos SET dataEmprestimo = ?, dataDevolucao = ?, descricao = ?, idAmigo = ?, status = ? WHERE idEmprestimo = ?";
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            psmt.setDate(1, new java.sql.Date(emprestimo.getDataEmprestimo().getTime()));
+            psmt.setDate(2, new java.sql.Date(emprestimo.getDataDevolucao().getTime()));
+            psmt.setString(3, emprestimo.getDescricao());
+            psmt.setInt(4, emprestimo.getAmigo().getIdAmigo());
+            psmt.setString(5, emprestimo.getStatus());
+            psmt.setInt(6, emprestimo.getIdEmprestimo());
+            int affectedRows = psmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                System.out.println("Atualização realizada com sucesso para o empréstimo com ID: " + emprestimo.getIdEmprestimo());
+                return true;
+            } else {
+                System.out.println("Nenhum empréstimo encontrado com o ID: " + emprestimo.getIdEmprestimo());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
     public void darBaixa(Integer id) {
         Connection con = ConnectionMySQLDAO.getConnection();
         String query = "UPDATE Emprestimos SET status = 'INATIVO' WHERE idEmprestimo = ?";
