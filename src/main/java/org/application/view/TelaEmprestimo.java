@@ -579,12 +579,25 @@ public class TelaEmprestimo extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
         modelo.setRowCount(0); // Limpa a tabela
 
+
         for (EmprestimoBean emprestimo : emprestimos) {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String dataEmprestimoFormatada = dateFormat.format(emprestimo.getDataEmprestimo());
+
+            // Formatar a data de devolução (adicionando 2 meses)
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(emprestimo.getDataDevolucao());
+            calendar.add(Calendar.MONTH, 2);
+            String dataDevolucaoFormatada = dateFormat.format(calendar.getTime());
+
             modelo.addRow(new Object[]{
                     emprestimo.getIdEmprestimo(),
+                    dataEmprestimoFormatada,
                     emprestimo.getDescricao(),
-                    emprestimo.getAmigo(),
-                    emprestimo.getListaLivros()
+                    emprestimo.getAmigo().getNome(),
+                    emprestimo.getListaLivros().size(),
+                    dataDevolucaoFormatada
             });
         }
     }
@@ -592,18 +605,18 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String filtroNome = jTextField1.getText(); // Obtenha o texto do campo de filtro
-        System.out.println("nome que será filtrado");
+        System.out.println("nome que será filtrado" + filtroNome);
 
         // Crie uma instância de SwingWorker para executar a busca por nome em segundo plano
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
                 // Realize a busca por nome e atualize a tabela com os resultados
-                List<EmprestimoBean> livrosFiltrados = EmprestimoDao.buscarLivroPorNome(filtroNome);
+                List<EmprestimoBean> emprestimosFiltrado = EmprestimoDao.buscarEmprestimoPorDescricao(filtroNome);
 
                 // Atualize a tabela na UI thread
                 SwingUtilities.invokeLater(() -> {
-                    atualizarTabela(livrosFiltrados);
+                    atualizarTabela(emprestimosFiltrado);
                 });
 
                 return null;
@@ -617,6 +630,12 @@ public class TelaEmprestimo extends javax.swing.JFrame {
     private void tabelaClientesMouseClicked(java.awt.event.MouseEvent evt) throws Exception {
         int linhaSelecionada = tabelaClientes.getSelectedRow();
         Integer idAmigo = (Integer) tabelaClientes.getValueAt(linhaSelecionada, 0);
+
+        tabelaBooks.clearSelection();
+        tabelaBooks.getSelectionForeground().brighter();
+        this.listLivrosIdsSelecionados = new HashSet<>();
+        this.listaLivrosSelecionados = new HashSet<>();
+        System.out.println("Limpando seleção" + this.listLivrosIdsSelecionados);
 
         try {
             EmprestimoBean emprestimo = EmprestimoDao.buscarEmprestimoPorId(idAmigo);
@@ -711,21 +730,7 @@ public class TelaEmprestimo extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
 
-
-        DefaultTableModel modelo = (DefaultTableModel) tabelaClientes.getModel();
-        modelo.setRowCount(0); // Limpa a tabela
-
-        List<EmprestimoBean> emprestimoBeans = EmprestimoDao.listarTodosEmprestimosDetalhados();
-
-        for (EmprestimoBean emprestimo : emprestimoBeans) {
-            modelo.addRow(new Object[]{
-                    emprestimo.getIdEmprestimo(),
-                    emprestimo.getDescricao(),
-                    emprestimo.getDataEmprestimo(),
-                    emprestimo.getDataDevolucao(),
-                    emprestimo.getStatus()
-            });
-        }
+        this.popularTabela();
 
 
     }

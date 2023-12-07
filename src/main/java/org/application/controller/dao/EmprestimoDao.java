@@ -51,6 +51,38 @@ public class EmprestimoDao {
         }
     }
 
+    public static List<EmprestimoBean> buscarEmprestimoPorDescricao(String filtroDescricao) {
+        List<EmprestimoBean> listaEmprestimos = new ArrayList<>();
+        Connection con = ConnectionMySQLDAO.getConnection();
+
+        // Utilize a cláusula SQL LIKE para buscar descrições que contenham o filtro
+        String query = "SELECT * FROM Emprestimos WHERE descricao LIKE ?";
+
+        try (PreparedStatement psmt = con.prepareStatement(query)) {
+            // Adicione o caractere '%' antes e depois do filtro para buscar descrições que contenham o filtro
+            psmt.setString(1, "%" + filtroDescricao + "%");
+
+            ResultSet rs = psmt.executeQuery();
+
+            while (rs.next()) {
+                EmprestimoBean emprestimo = new EmprestimoBean();
+                emprestimo.setIdEmprestimo(rs.getInt("idEmprestimo"));
+                emprestimo.setDescricao(rs.getString("descricao"));
+                emprestimo.setDataEmprestimo(rs.getDate("dataEmprestimo"));
+                emprestimo.setDataDevolucao(rs.getDate("dataDevolucao"));
+                emprestimo.setStatus(rs.getString("status"));
+                emprestimo.setListaLivros(buscarLivrosPorEmprestimo(con, emprestimo.getIdEmprestimo()));
+                emprestimo.setAmigo(buscarAmigoPorEmpresti(con, emprestimo.getIdEmprestimo()));
+
+                listaEmprestimos.add(emprestimo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaEmprestimos;
+    }
+
 
     public static EmprestimoBean buscarEmprestimoPorId(int idEmprestimo) {
         EmprestimoBean emprestimo = null;
