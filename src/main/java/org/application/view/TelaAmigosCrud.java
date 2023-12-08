@@ -289,9 +289,6 @@ public class TelaAmigosCrud extends javax.swing.JFrame {
 
         List<AmigoBean> amigos = AmigoDao.listarTodos();
 
-        jButtonBack.setEnabled(false);
-
-
         btnSalvar.setText("Salvar");
 
 
@@ -538,7 +535,6 @@ public class TelaAmigosCrud extends javax.swing.JFrame {
 
         PrincipalJFrame principalJFrame = new PrincipalJFrame();
         principalJFrame.setVisible(true);
-        this.setVisible(false);
 
     }//GEN-LAST:event_jButtonBackActionPerformed
 

@@ -55,11 +55,9 @@ public class EmprestimoDao {
         List<EmprestimoBean> listaEmprestimos = new ArrayList<>();
         Connection con = ConnectionMySQLDAO.getConnection();
 
-        // Utilize a cláusula SQL LIKE para buscar descrições que contenham o filtro
         String query = "SELECT * FROM Emprestimos WHERE descricao LIKE ?";
 
         try (PreparedStatement psmt = con.prepareStatement(query)) {
-            // Adicione o caractere '%' antes e depois do filtro para buscar descrições que contenham o filtro
             psmt.setString(1, "%" + filtroDescricao + "%");
 
             ResultSet rs = psmt.executeQuery();
@@ -104,13 +102,6 @@ public class EmprestimoDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("*******************************");
-        System.out.println("*******************************");
-        System.out.println("*******************************");
-        System.out.println("aquiiiiiiiiiii esse clarianaaaa" + emprestimo);
-        System.out.println("*******************************");
-        System.out.println("*******************************");
-        System.out.println("*******************************");
         return emprestimo;
     }
 
